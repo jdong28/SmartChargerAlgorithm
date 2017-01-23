@@ -1,8 +1,7 @@
-package com.company;
+package fydp.model;
 
 import javafx.util.Pair;
 
-import java.time.Duration;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,20 +25,10 @@ public class CarChargerController {
 
     //generates list of random car chargers, representing one solution
     private static List<CarCharger> GenerateRandomCarChargers (int length) {
-        LocalTime randomStartTime = LocalTime.of(8, 0);
-        List<CarCharger> carChargerList = new ArrayList<>();
+       List<CarCharger> carChargerList = new ArrayList<>();
 
         for (int i = 0; i < length; i++){
-            int randomDuraInt = ThreadLocalRandom.current().nextInt(1, 10+1);
-            Duration randomDuration = Duration.ofHours((long) randomDuraInt);
-
-            int randomDist = ThreadLocalRandom.current().nextInt(5, 100);
-            double randomBatt = ThreadLocalRandom.current().nextDouble(0.1, 1);
-
-            // constant rate for all cars for now
-            double chargeRate = 3.3;
-
-            carChargerList.add(new CarCharger(randomStartTime, randomDuration, randomDist, randomBatt, chargeRate));
+            carChargerList.add(new CarCharger());
         }
 
         return carChargerList;
@@ -56,15 +45,15 @@ public class CarChargerController {
 
             for (int j = 0; j < chroms.get(i).size(); j++) {
                 CarCharger currentCar = chroms.get(i).get(j);
-                LocalTime starttime = currentCar.getLocalTime();
-                Duration duration = currentCar.getDuration();
-                LocalTime endtime = starttime.plus(duration);
+                double[] chargeTime = currentCar.getChargeTime();
 
                 double sumElectricityPrice = 0;
 
                 //assumes price is an hourly array, will have to revise
-                for (int x = starttime.getHour(); x < endtime.getHour(); x++) {
-                    sumElectricityPrice =+ electricityPrice[x];
+                for (int x = 0; x < 24; x++) {
+                    if (chargeTime[x] == 1) {
+                        sumElectricityPrice = +electricityPrice[x];
+                    }
                 }
 
                 costsum =+ sumElectricityPrice * currentCar.getCharge_rate();
