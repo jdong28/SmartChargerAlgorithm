@@ -19,22 +19,30 @@ public class Main extends Application {
 
     List<List<CarCharger>> chrom = CarChargerController.GenerateInitialSolution(5,10);
 
-    final TitledPane[] tps = new TitledPane[chrom.size()];
-    final NumberAxis xAxis = new NumberAxis("Time", 1, 24, 1);
-    final NumberAxis yAxis = new NumberAxis("Charge Rate (kW)", 1, 10, 1);
-    AreaChart<Number, Number>[] ac = new AreaChart[chrom.size()];
+    private int chromSize = chrom.size();
+
+    private TitledPane[] tps = new TitledPane[chromSize];
+
+    // each graph needs its own x-y axis values
+    private NumberAxis[] xAxis = new NumberAxis[chromSize];
+    private NumberAxis[] yAxis = new NumberAxis[chromSize];
+
+    //
+    AreaChart<Number, Number>[] ac = new AreaChart[chromSize];
 
     // charging schedule of each car, gets number of cars from 1st solution
     private XYChart.Series[] series = new XYChart.Series[chrom.get(0).size()];
 
     public void start(Stage primaryStage) throws Exception{
         //Parent root = FXMLLoader.load(getClass().getResource("../../fydp/view/Main.fxml"));
-        Scene scene = new Scene(new Group(), 400, 600);
+        Scene scene = new Scene(new Group(), 800, 600);
         final Accordion accordion = new Accordion();
 
         // loop through every parking lot and graph the solution
         for (int i = 0; i < chrom.size(); i++) {
-            ac[i] = new AreaChart<>(xAxis, yAxis);
+            xAxis[i] = new NumberAxis("Time", 1, 24, 1);
+            yAxis[i] = new NumberAxis("Charge Rate (kW)", 1, 10, 1);
+            ac[i] = new AreaChart<>(xAxis[i], yAxis[i]);
 
             // loop through every charger
             for (int x = 0; x < chrom.get(i).size(); x++) {
