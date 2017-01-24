@@ -1,4 +1,5 @@
 package fydp.view;
+import java.util.ArrayList;
 import java.util.List;
 
 import fydp.model.CarCharger;
@@ -14,10 +15,11 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.TitledPane;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 
 public class Main extends Application {
 
-    List<List<CarCharger>> chrom = CarChargerController.GenerateInitialSolution(5,10);
+    private static List<List<CarCharger>> chrom = CarChargerController.GenerateInitialSolution(5,10);
 
     private int chromSize = chrom.size();
 
@@ -54,6 +56,9 @@ public class Main extends Application {
                     if (chargeTime[y] == 1) {
                         series[x].getData().add(new XYChart.Data<>(y, chrom.get(i).get(x).getCharge_rate()));
                     }
+                    else {
+                        series[x].getData().add(new XYChart.Data<>(y, 0));
+                    }
                 }
             }
             ac[i].getData().addAll(series[i]);
@@ -72,6 +77,17 @@ public class Main extends Application {
 
     public static void main(String[] args) {
 	// Generate list of cars
+
+        double[] electricityPrice = new double[48];
+
+        for (int i = 0; i < 48; i ++) {
+            electricityPrice[i] = 0.035;
+        }
+
+        List<Pair<List<CarCharger>, Double>> chromWithFit = new ArrayList<>();
+        chromWithFit = CarChargerController.EvaluateFitness(chrom, electricityPrice);
+
+
         launch(args);
     }
 

@@ -60,8 +60,8 @@ public class CarCharger {
 
     public CarCharger() {
 
-        //assume charge from 8AM to 1PM
-        for (int i = 14; i < 24; i++) {
+        //assume charge from 8AM to 12PM
+        for (int i = 16; i < 24; i++) {
             chargeTime[i] = 1;
         }
         travel_distance = ThreadLocalRandom.current().nextInt(5, 100);

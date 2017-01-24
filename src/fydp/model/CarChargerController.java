@@ -37,7 +37,7 @@ public class CarChargerController {
     //untested
     public static List<Pair<List<CarCharger>, Double>> EvaluateFitness (List<List<CarCharger>> chroms, double[] electricityPrice) {
 
-        List<Pair<List<CarCharger>, Double>> chromWithFitness = new ArrayList<>();
+        List<Pair<List<CarCharger>, Double>> chromWithFitness = new ArrayList<>(chroms.size());
 
         for (int i = 0; i < chroms.size(); i++) {
 
@@ -49,17 +49,18 @@ public class CarChargerController {
 
                 double sumElectricityPrice = 0;
 
-                //assumes price is an hourly array, will have to revise
-                for (int x = 0; x < 24; x++) {
+                //assumes price is array of half hour prices
+                for (int x = 0; x < 48; x++) {
                     if (chargeTime[x] == 1) {
-                        sumElectricityPrice = +electricityPrice[x];
+                        // divide by 2 because half hour
+                        sumElectricityPrice = sumElectricityPrice + electricityPrice[x]/2;
                     }
                 }
 
-                costsum =+ sumElectricityPrice * currentCar.getCharge_rate();
+                costsum = costsum + sumElectricityPrice * currentCar.getCharge_rate();
             }
             Pair<List<CarCharger>, Double> solWithFitness = new Pair<>(chroms.get(i), costsum);
-            chromWithFitness.set(i, solWithFitness);
+            chromWithFitness.add(i, solWithFitness);
         }
         return chromWithFitness;
     }
