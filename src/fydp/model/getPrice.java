@@ -4,12 +4,25 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
 
+import com.thoughtworks.xstream.XStream;
+
+
 public class getPrice {
 
 	public static void main(String[] args){
-		String s = new String();
+		String s = new String(); 
+		//private double[] prices = new double[48];
+		XStream xstream = new XStream();
+
 		s = getPrice("http://reports.ieso.ca/public/DispUnconsHOEP/PUB_DispUnconsHOEP.xml");
-		System.out.println(s);
+
+		String deSerializedPrice =  (String)xstream.fromXML(s);
+
+
+		System.out.println(deSerializedPrice);
+
+
+
 	}
 
 	public static String getPrice(String getURL) {

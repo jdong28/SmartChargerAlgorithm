@@ -34,6 +34,26 @@ public class CarChargerController {
         return carChargerList;
     }
 
+    // Generic type to accept two generic array of type int, double or char.
+    // Returns crossover in type double
+    public static <E> void getCrossovers ( E[] inputArrayOne, E[] inputArrayTwo ) {
+        Integer[] outputArrayOne  = new Integer[48];
+        Integer[] outputArrayTwo  = new Integer[48];
+        int counter = 0;
+        for (E element : inputArrayOne) {
+            if (Math.random() % 2 == 0){
+                outputArrayOne[counter] = (int) element;
+                outputArrayTwo[counter] = (int) inputArrayTwo[counter];
+
+            } else {
+                outputArrayOne[counter]  = (int) inputArrayTwo[counter];
+                outputArrayTwo[counter] = (int) element;
+            }
+            counter++;
+        }
+        return outputArrayOne, outputArrayTwo;
+    }
+
     //untested
     public static List<Pair<List<CarCharger>, Double>> EvaluateFitness (List<List<CarCharger>> chroms, double[] electricityPrice) {
 
