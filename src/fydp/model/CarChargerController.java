@@ -4,6 +4,7 @@ import javafx.util.Pair;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -25,18 +26,21 @@ public class CarChargerController {
         return chromosome;
     }
 
-    //generates list of random car chargers, representing one solution
-    private static List<CarCharger> GenerateRandomCarChargers (int length) {
+    //generates list of random car chargers
+    public static List<CarCharger> GenerateRandomCarChargers (int length) {
        List<CarCharger> carChargerList = new ArrayList<>();
 
         for (int i = 0; i < length; i++){
-            carChargerList.add(new CarCharger());
+            CarCharger carCharger = new CarCharger();
+            carChargerList.add(carCharger);
+
+            System.out.println(String.format("Battery level: %f", carCharger.getBattery_level()));
         }
 
         return carChargerList;
     }
 
-    //untested
+    //Calculate fitness for GA
     public static List<Pair<List<CarCharger>, Double>> EvaluateFitness (List<List<CarCharger>> chroms, double[] electricityPrice) {
 
         List<Pair<List<CarCharger>, Double>> chromWithFitness = new ArrayList<>(chroms.size());
