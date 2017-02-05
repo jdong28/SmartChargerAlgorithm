@@ -8,7 +8,9 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * Created by xiuxu on 2017-01-16.
+ * Calculate price matrix
+ * Sort CarChargers
+ * Assign CarChargers according to price matrix
  */
 public class CarChargerController {
 

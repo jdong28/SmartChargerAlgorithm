@@ -16,7 +16,9 @@ import javafx.scene.control.Accordion;
 import javafx.scene.control.TitledPane;
 import javafx.stage.Stage;
 import javafx.util.Pair;
-
+/**
+ * Method for running algorithm
+ */
 public class Main extends Application {
 
     private static List<List<CarCharger>> chrom = CarChargerController.GenerateInitialSolution(5,10);

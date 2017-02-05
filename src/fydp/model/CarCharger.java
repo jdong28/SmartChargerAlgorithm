@@ -108,6 +108,8 @@ public class CarCharger {
         for (int i = 0; i < 48; i ++) {
         }
 
+        return 0;
+
     }
 
 
