@@ -48,7 +48,7 @@ public class Main extends Application {
             ac[i] = new AreaChart<>(xAxis[i], yAxis[i]);
 
             series[i] = new XYChart.Series();
-            double[] chargeTime = initialSolution.get(i).getChargeTime();
+            double[] chargeTime = initialSolution.get(i).chargeTime;
 
             // loop through every half hour
             for (int y = 0; y < 47; y++) {

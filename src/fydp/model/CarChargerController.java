@@ -51,13 +51,11 @@ public class CarChargerController {
 
             for (int j = 0; j < chroms.get(i).size(); j++) {
                 CarCharger currentCar = chroms.get(i).get(j);
-                double[] chargeTime = currentCar.getChargeTime();
-
                 double sumElectricityPrice = 0;
 
                 //assumes price is array of half hour prices
                 for (int x = 0; x < 48; x++) {
-                    if (chargeTime[x] == 1) {
+                    if (currentCar.chargeTime[x] == 1) {
                         // divide by 2 because half hour
                         sumElectricityPrice = sumElectricityPrice + electricityPrice[x]/2;
                     }

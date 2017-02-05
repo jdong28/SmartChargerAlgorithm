@@ -21,7 +21,7 @@ public class CarCharger {
     private double fullChargeTime = 4;
 
     //Start time, half hour intervals
-    private double[] chargeTime = new double[48];
+    public double[] chargeTime = new double[48];
 
     //Range of travel
     private double travel_distance;
@@ -34,10 +34,6 @@ public class CarCharger {
 
     public int getChargeSlots() {
         return chargeSlots;
-    }
-
-    public void setChargeSlots(int chargeSlots) {
-        this.chargeSlots = chargeSlots;
     }
 
     public double getChargePriority() {
@@ -54,14 +50,6 @@ public class CarCharger {
 
     public void setFullChargeTime(double fullChargeTime) {
         this.fullChargeTime = fullChargeTime;
-    }
-
-    public double[] getChargeTime() {
-        return chargeTime;
-    }
-
-    public void setChargeTime(double[] chargeTime) {
-        this.chargeTime = chargeTime;
     }
 
     public double getTravel_distance() {
