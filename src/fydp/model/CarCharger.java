@@ -11,6 +11,9 @@ package fydp.model;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class CarCharger {
+    //number of half hour slots
+    private int chargeSlots;
+
     //priority of charging
     private double chargePriority;
 
@@ -18,7 +21,7 @@ public class CarCharger {
     private double fullChargeTime = 4;
 
     //Start time, half hour intervals
-    private double[] chargeTime = new double[48];
+    public double[] chargeTime = new double[48];
 
     //Range of travel
     private double travel_distance;
@@ -28,6 +31,10 @@ public class CarCharger {
 
     //Rate of charge in kWH
     private double charge_rate;
+
+    public int getChargeSlots() {
+        return chargeSlots;
+    }
 
     public double getChargePriority() {
         return chargePriority;
@@ -43,14 +50,6 @@ public class CarCharger {
 
     public void setFullChargeTime(double fullChargeTime) {
         this.fullChargeTime = fullChargeTime;
-    }
-
-    public double[] getChargeTime() {
-        return chargeTime;
-    }
-
-    public void setChargeTime(double[] chargeTime) {
-        this.chargeTime = chargeTime;
     }
 
     public double getTravel_distance() {
@@ -77,38 +76,50 @@ public class CarCharger {
         this.charge_rate = charge_rate;
     }
 
-    public CarCharger(double[] time, double[] dura, int dist, double batt, double crate){
-        chargeTime = time;
-        travel_distance = dist;
-        battery_level = batt;
-        charge_rate = crate;
+    public CarCharger(int chargeSlots, double chargePriority, double fullChargeTime, double[] chargeTime,
+                      double travel_distance, double battery_level, double charge_rate) {
+        this.chargeSlots = chargeSlots;
+        this.chargePriority = chargePriority;
+        this.fullChargeTime = fullChargeTime;
+        this.chargeTime = chargeTime;
+        this.travel_distance = travel_distance;
+        this.battery_level = battery_level;
+        this.charge_rate = charge_rate;
     }
 
     public CarCharger() {
-        //assume each car takes 4 hours to charge
-
-        //assume charge from 8AM to 12PM
-        for (int i = 16; i < 24; i++) {
-            chargeTime[i] = 1;
-        }
         travel_distance = ThreadLocalRandom.current().nextInt(5, 100);
         battery_level = ThreadLocalRandom.current().nextDouble(0.1, 1);
+        chargeSlots = (int) Math.ceil((1-battery_level) * fullChargeTime * 2);
 
         // constant rate for all cars for now
         charge_rate = 3.3;
 
+        //assume each car takes 4 hours to charge
+        CalculateChargeTime();
     }
 
-    double CalculateChargeTime () {
-        int chargeSlotNumer = (int) Math.ceil(battery_level * fullChargeTime);
+    void CalculateChargeTime () {
+        int counter = 0;
 
-        int startTime = ThreadLocalRandom.current().nextInt(7, 10);
-        int endTime = ThreadLocalRandom.current().nextInt(4,7);
+        //nextInt upper bound exclusive
+        //use 24 hour notations
+        int startTime = ThreadLocalRandom.current().nextInt(6, 11);
+        int endTime = ThreadLocalRandom.current().nextInt(15,20);
 
         for (int i = 0; i < 48; i ++) {
+            if (i < startTime * 2 || i > endTime * 2) {
+                chargeTime[i] = 2;
+            }
+            else if (counter < chargeSlots * 2) {
+                chargeTime[i] = 1;
+                counter++;
+            }
+            else {
+                chargeTime[i] = 0;
+            }
         }
 
-        return 0;
 
     }
 
