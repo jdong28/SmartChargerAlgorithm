@@ -1,47 +1,53 @@
 package fydp.model;
 
-import javafx.util.Pair;
-
-import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Calculate price matrix
  * Sort CarChargers
  * Assign CarChargers according to price matrix
  */
-public class CarChargerController {
+public final class CarChargerController {
 
-    //generates list of initial solutions
-    public static List<List<CarCharger>> GenerateInitialSolution (int poolSize, int carNumber) {
-        List<List<CarCharger>> chromosome = new ArrayList<>();
-
-        for (int i=0; i<poolSize; i++) {
-            chromosome.add(GenerateRandomCarChargers(carNumber));
-        }
-
-        return chromosome;
-    }
-
-    //generates list of random car chargers
-    public static List<CarCharger> GenerateRandomCarChargers (int length) {
+    /** Generates a list of random car chargers. */
+    public static List<CarCharger> generateRandomCarChargers(int length) {
        List<CarCharger> carChargerList = new ArrayList<>();
 
         for (int i = 0; i < length; i++){
             CarCharger carCharger = new CarCharger();
             carChargerList.add(carCharger);
 
-            System.out.println(String.format("Battery level: %f", carCharger.getBattery_level()));
+            System.out.println(String.format("Battery level: %f", carCharger.getBatteryLevel()));
         }
 
         return carChargerList;
     }
 
+    /** Sorts list of car chargers based on chargePriority */
+    public static List<CarCharger> sortCarChargersPriority(List<CarCharger> carChargers) {
+
+
+
+        return carChargers;
+    }
+
+/**
+ * Deprecated
+    //generates list of initial solutions
+    public static List<List<CarCharger>> generateInitialSolution(int poolSize, int carNumber) {
+        List<List<CarCharger>> chromosome = new ArrayList<>();
+
+        for (int i=0; i<poolSize; i++) {
+            chromosome.add(generateRandomCarChargers(carNumber));
+        }
+
+        return chromosome;
+    }
+
+
     //Calculate fitness for GA
-    public static List<Pair<List<CarCharger>, Double>> EvaluateFitness (List<List<CarCharger>> chroms, double[] electricityPrice) {
+    public static List<Pair<List<CarCharger>, Double>> evaluateFitness(List<List<CarCharger>> chroms, double[] electricityPrice) {
 
         List<Pair<List<CarCharger>, Double>> chromWithFitness = new ArrayList<>(chroms.size());
 
@@ -61,12 +67,13 @@ public class CarChargerController {
                     }
                 }
 
-                costsum = costsum + sumElectricityPrice * currentCar.getCharge_rate();
+                costsum = costsum + sumElectricityPrice * currentCar.getChargeRate();
             }
             Pair<List<CarCharger>, Double> solWithFitness = new Pair<>(chroms.get(i), costsum);
             chromWithFitness.add(i, solWithFitness);
         }
         return chromWithFitness;
     }
+**/
 
 }
