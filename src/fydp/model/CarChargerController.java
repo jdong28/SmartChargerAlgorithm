@@ -10,6 +10,70 @@ import java.util.List;
  */
 public final class CarChargerController {
 
+    public static int capacity[48];
+    public static int priority[48];
+
+    private static void priority_generator(double[] price){
+        int k=0;
+        for(int i=0; i<48; i++){
+            priority[i] = price[i];
+        }
+        for(int j=0; j<48; j++){
+            int rank=0;
+            for(int k=0; k<48;k++){
+                if (priority[j]>=price[k]){
+                    rank++;
+                }
+            }
+            priority[j]=rank;
+        }
+    }
+
+    public static List<CarCharger> CarCharger_slot_assign(List<CarCharger> solution){
+        int size = solution.size();
+        int hours_remaining[size];
+        for (int i=0;i<size;i++){
+            int hours_remaining[]=solution.get(i).getChargeSlots();
+        }
+
+        // for each time slot
+        for (int i=0;i<48;i++){
+            int capa=capacity[i];
+            //for each car
+            for ( int j=0; j<=size; j++){
+                if( capa==0){
+                    break;
+                }
+                if(solution.get(j).chargeTime[i]==2||hours_remaining[j]==0){
+                    continue;
+                }
+                else {
+                    solution.get(j).chargeTime[i]==3;
+                    hours_remaining[j]--;
+                }
+            }
+        }
+
+        // for each car
+        for (int k=0;k< size; k++){
+            if( hours_remaining[k]!=0){
+                for (int l=0;l<48;l++){
+                    if (solution.get(k).chargeTime[l]==2 || solution.get(k).chargeTime[l]==3){
+                        continue;
+                    }
+                    else {
+                        solution.get(k).chargeTime[l]=3;
+                        hours_remaining[k]--;
+                    }
+                    if(hours_remaining[k]==0){
+                        break;
+                    }
+                }
+            }
+        }
+        return solution;
+    }
+
     /** Generates a list of random car chargers. */
     public static List<CarCharger> generateRandomCarChargers(int length) {
        List<CarCharger> carChargerList = new ArrayList<>();
