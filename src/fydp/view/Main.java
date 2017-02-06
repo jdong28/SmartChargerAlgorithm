@@ -1,5 +1,5 @@
 package fydp.view;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import fydp.model.CarCharger;
@@ -13,28 +13,27 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.TitledPane;
 import javafx.stage.Stage;
-import javafx.util.Pair;
+
 /**
  * Method for running algorithm
  */
 public class Main extends Application {
 
-    private static List<CarCharger> initialSolution =
-            CarChargerController.GenerateRandomCarChargers(10);
+    private static List<CarCharger> initialSolution;
 
-    private int solSize = initialSolution.size();
+    private static int solSize;
 
-    private TitledPane[] tps = new TitledPane[solSize];
+    private static TitledPane[] tps;
 
     // each graph needs its own x-y axis values
-    private NumberAxis[] xAxis = new NumberAxis[solSize];
-    private NumberAxis[] yAxis = new NumberAxis[solSize];
+    private static NumberAxis[] xAxis;
+    private static NumberAxis[] yAxis;
 
     //
-    AreaChart<Number, Number>[] ac = new AreaChart[solSize];
+    private static AreaChart<Number, Number>[] ac;
 
     // charging schedule of each car
-    private XYChart.Series[] series = new XYChart.Series[initialSolution.size()];
+    private static XYChart.Series[] series;
 
     public void start(Stage primaryStage) throws Exception{
         //Parent root = FXMLLoader.load(getClass().getResource("../../fydp/view/Main.fxml"));
@@ -53,7 +52,7 @@ public class Main extends Application {
             // loop through every half hour
             for (int y = 0; y < 47; y++) {
                 if (chargeTime[y] == 1) {
-                    series[i].getData().add(new XYChart.Data<>(y, initialSolution.get(i).getCharge_rate()));
+                    series[i].getData().add(new XYChart.Data<>(y, initialSolution.get(i).getChargeRate()));
                 }
                 else {
                     series[i].getData().add(new XYChart.Data<>(y, chargeTime[y]));
@@ -82,7 +81,21 @@ public class Main extends Application {
             electricityPrice[i] = 0.035;
         }
 
+        initialize();
+
+        Collections.sort(initialSolution, (o1, o2) -> o1.getChargePriority() < o2.getChargePriority() ? 1:-1);
+
         launch(args);
     }
 
+    /** Initializes fields for algorithm and GUI */
+    private static void initialize() {
+        initialSolution = CarChargerController.generateRandomCarChargers(10);
+        solSize = initialSolution.size();
+        tps = new TitledPane[solSize];
+        xAxis = new NumberAxis[solSize];
+        yAxis = new NumberAxis[solSize];
+        ac = new AreaChart[solSize];
+        series = new XYChart.Series[initialSolution.size()];
+    }
 }
