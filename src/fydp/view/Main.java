@@ -1,6 +1,7 @@
 package fydp.view;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 import fydp.model.CarCharger;
 import fydp.model.CarChargerController;
@@ -51,7 +52,7 @@ public class Main extends Application {
 
             // loop through every half hour
             for (int y = 0; y < 47; y++) {
-                if (chargeTime[y] == 1) {
+                if (chargeTime[y] == 3) {
                     series[i].getData().add(new XYChart.Data<>(y, initialSolution.get(i).getChargeRate()));
                 }
                 else {
@@ -78,12 +79,18 @@ public class Main extends Application {
         double[] electricityPrice = new double[48];
 
         for (int i = 0; i < 48; i ++) {
-            electricityPrice[i] = 0.035;
+            electricityPrice[i] = ThreadLocalRandom.current().nextDouble(0, 0.5);
         }
 
         initialize();
 
+
         Collections.sort(initialSolution, (o1, o2) -> o1.getChargePriority() < o2.getChargePriority() ? 1:-1);
+
+        initialSolution = CarChargerController.CarChargerSlotAssign(initialSolution,electricityPrice);
+
+
+
 
         launch(args);
     }
@@ -91,6 +98,7 @@ public class Main extends Application {
     /** Initializes fields for algorithm and GUI */
     private static void initialize() {
         initialSolution = CarChargerController.generateRandomCarChargers(10);
+
         solSize = initialSolution.size();
         tps = new TitledPane[solSize];
         xAxis = new NumberAxis[solSize];
