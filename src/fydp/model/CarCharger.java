@@ -50,6 +50,8 @@ public class CarCharger{
         return chargePriority;
     }
 
+    public int getChargeSlots() {return chargeSlots;}
+
     public CarCharger() {
         travelDistance = ThreadLocalRandom.current().nextInt(5, 100);
         batteryLevel = ThreadLocalRandom.current().nextDouble(0.1, 1);
