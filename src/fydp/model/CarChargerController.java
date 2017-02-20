@@ -12,17 +12,10 @@ import java.util.Random;
 public final class CarChargerController {
 
 
-    public static List<CarCharger> CarChargerSlotAssign(List<CarCharger> solution, double[] price){
-        int[] capacity= new int[48];
+    public static List<CarCharger> CarChargerSlotAssign(List<CarCharger> solution, double[] price, int[] capacity){
         int[] hours_remaining= new int[48];
         int[] priority= new int[48];
         double[] sorted_price= new double[48];
-
-        // loop to be removed
-        for(int i=0; i<48; i++) {
-            capacity[i]=100;
-        }
-        //*******
 
         // sort price and calculate priority list
         for(int i=0; i<48; i++){
@@ -100,9 +93,6 @@ public final class CarChargerController {
 
     /** Sorts list of car chargers based on chargePriority */
     public static List<CarCharger> sortCarChargersPriority(List<CarCharger> carChargers) {
-
-
-
         return carChargers;
     }
 
