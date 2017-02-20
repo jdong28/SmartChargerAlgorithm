@@ -13,7 +13,7 @@ public final class CarChargerController {
 
 
     public static List<CarCharger> CarChargerSlotAssign(List<CarCharger> solution, double[] price, int[] capacity){
-        int[] hours_remaining= new int[48];
+        int[] hours_remaining;
         int[] priority= new int[48];
         double[] sorted_price= new double[48];
 
@@ -32,8 +32,9 @@ public final class CarChargerController {
         }
         // get size of solution and hours remaining to be charged for each car
         int size = solution.size();
+        hours_remaining = new int[size];
         for (int i=0;i<size;i++){
-             hours_remaining[i]=solution.get(i).getChargeSlots();
+            hours_remaining[i]=solution.get(i).getChargeSlots();
             System.out.println(hours_remaining[i]);
         }
 

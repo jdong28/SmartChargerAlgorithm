@@ -23,6 +23,9 @@ public class CarCharger{
     //Start time, half hour intervals
     public double[] chargeTime = new double[48];
 
+    //chargeTime that is not optimized
+    public double[] unoptimizedChargeTime = new double[48];
+
     //Range of travel
     private double travelDistance;
 
@@ -37,6 +40,10 @@ public class CarCharger{
 
     // Time user leaves
     private int endTime;
+
+    public int getStartTime() {
+        return startTime;
+    }
 
     public double getBatteryLevel() {
         return batteryLevel;
@@ -79,13 +86,16 @@ public class CarCharger{
         for (int i = 0; i < 48; i ++) {
             if (i < startTime * 2 || i > endTime * 2) {
                 chargeTime[i] = 2;
+                unoptimizedChargeTime[i] = 2;
             }
             else if (counter < chargeSlots * 2) {
                 chargeTime[i] = 1;
+                unoptimizedChargeTime[i] = 1;
                 counter++;
             }
             else {
                 chargeTime[i] = 0;
+                unoptimizedChargeTime[i] = 0;
             }
         }
     }

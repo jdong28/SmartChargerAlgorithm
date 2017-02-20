@@ -12,13 +12,14 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class Solution {
     public static List<CarCharger> initialSolution;
+    public static double[] electricityPrice;
 
     public static void GenerateInitialSolution (int num){
         initialSolution = CarChargerController.generateRandomCarChargers(num);
 
         // Generate list of cars
 
-        double[] electricityPrice = new double[48];
+        electricityPrice = new double[48];
         int[] capacity = new int[48];
 
         // loop to be removed
