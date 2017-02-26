@@ -9,9 +9,7 @@ import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Accordion;
-import javafx.scene.control.Label;
-import javafx.scene.control.TitledPane;
+import javafx.scene.control.*;
 
 import static fydp.view.Solution.electricityPrice;
 import static fydp.view.Solution.initialSolution;
@@ -31,6 +29,10 @@ public class MainViewController {
     // charging schedule of each car
     private static XYChart.Series[] series;
 
+
+    private static double[] demandBefore = new double[48];
+    private static double[] demandAfter = new double[48];
+
     // javafx fields
     @FXML
     private Accordion fxScheduleAccordion;
@@ -38,17 +40,41 @@ public class MainViewController {
     private LineChart<Number, Number> priceComparisonChart;
     @FXML
     private LineChart<Number, Number> electricityChart;
+    @FXML
+    private ListView<String> dataListView;
+    @FXML
+    private Label priceBeforeLabel;
+    @FXML
+    private Label priceAfterLabel;
+    @FXML
+    private Label priceDifferenceLabel;
+
 
     // runs first
     @FXML
     private void initialize() {
         InitializeFields();
-        ConfigureChargingGraphs();
-        ConfigureDemandGraph();
-        ConfigureElectricityGraph();
+        configureChargingGraphs();
+        configureDemandGraph();
+        configureElectricityGraph();
+        //String teststring = GetPrice.getElectricityPrice();
+        configureDataLabels();
     }
 
-    private void ConfigureChargingGraphs() {
+    private void configureDataLabels() {
+        double costbefore = 0;
+        double costafter = 0;
+        for (int i = 0; i < 48; i++) {
+            costbefore = costbefore + demandBefore[i] * electricityPrice[i];
+            costafter = costafter + demandAfter[i] * electricityPrice[i];
+        }
+
+        priceBeforeLabel.setText("Price before: " + Double.toString(costbefore));
+        priceAfterLabel.setText("Price after: " + Double.toString(costafter));
+        priceDifferenceLabel.setText("Price difference: " + Double.toString(costbefore - costafter));
+    }
+
+    private void configureChargingGraphs() {
         // loop through every car and graph the solution
         for (int i = 0; i < initialSolution.size(); i++) {
             xAxis[i] = new NumberAxis("Time", 0, 48, 1);
@@ -68,7 +94,8 @@ public class MainViewController {
                 }
             }
             ac[i].getData().addAll(series[i]);
-            String carName = String.format("Chrom number: %d", i);
+            ac[i].setLegendVisible(false);
+            String carName = String.format("Car number: %d", i);
             tps[i] = new TitledPane(carName, ac[i]);
         }
         // Setup
@@ -77,7 +104,7 @@ public class MainViewController {
         fxScheduleAccordion.setExpandedPane(tps[0]);
     }
 
-    private void ConfigureDemandGraph() {
+    private void configureDemandGraph() {
         ObservableList<XYChart.Series<Number, Number>> data = FXCollections
                 .observableArrayList();
 
@@ -105,14 +132,17 @@ public class MainViewController {
             beforeAlgo.getData().add(new XYChart.Data<>(i, yValueBeforeAlgo));
 
             afterAlgo.getData().add(new XYChart.Data<>(i, yValueAfterAlgo));
+
+            demandBefore[i] = yValueBeforeAlgo;
+            demandAfter[i] = yValueAfterAlgo;
         }
 
         data.addAll(beforeAlgo, afterAlgo);
         priceComparisonChart.setData(data);
-        priceComparisonChart.setTitle("Price Comparison");
+        priceComparisonChart.setTitle("Demand Comparison");
     }
 
-    private void ConfigureElectricityGraph() {
+    private void configureElectricityGraph() {
         ObservableList<XYChart.Series<Number, Number>> data = FXCollections
                 .observableArrayList();
         XYChart.Series elecPrice = new XYChart.Series();
@@ -128,7 +158,7 @@ public class MainViewController {
 
     /** Initializes fields for algorithm and GUI */
     private static void InitializeFields() {
-        Solution.GenerateInitialSolution(50);
+        Solution.generateInitialSolution(25);
 
         solSize = initialSolution.size();
         tps = new TitledPane[solSize];

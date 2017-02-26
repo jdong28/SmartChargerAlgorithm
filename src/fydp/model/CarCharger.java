@@ -10,6 +10,8 @@ package fydp.model;
 
 import java.util.concurrent.ThreadLocalRandom;
 
+import static fydp.view.Solution.electricityPrice;
+
 public class CarCharger{
     //number of half hour slots
     private int chargeSlots;
@@ -26,6 +28,8 @@ public class CarCharger{
     //chargeTime that is not optimized
     public double[] unoptimizedChargeTime = new double[48];
 
+    private double unoptimizedChargeCost = 0;
+
     //Range of travel
     private double travelDistance;
 
@@ -40,6 +44,10 @@ public class CarCharger{
 
     // Time user leaves
     private int endTime;
+
+    public double getUnoptimizedChargeCost() {
+        return unoptimizedChargeCost;
+    }
 
     public int getStartTime() {
         return startTime;
@@ -77,10 +85,12 @@ public class CarCharger{
 
         // Prioritizes charging from highest to lowest
         chargePriority = (double) chargeSlots/(endTime - startTime);
+
+        unoptimizedChargeCost = calculateCost();
     }
 
     /** Calculates how many 30 minutes slots the car requires to fully charge */
-    void calculateChargeTime() {
+    private void calculateChargeTime() {
         int counter = 0;
 
         for (int i = 0; i < 48; i ++) {
@@ -98,6 +108,19 @@ public class CarCharger{
                 unoptimizedChargeTime[i] = 0;
             }
         }
+    }
+
+    // Calculates unoptimized cost
+    private double calculateCost() {
+        double cost = 0;
+        for (int i = 0; i < 48; i++) {
+            if (chargeTime[i] == 1)
+
+            //Divide by 2 since cost is given per hour
+            cost = cost + chargeTime[i]*electricityPrice[i]/2;
+        }
+
+        return cost;
     }
 
 }

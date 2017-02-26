@@ -1,28 +1,36 @@
+package fydp.model;
+
+import javax.xml.parsers.*;
+import org.xml.sax.*;
+import org.xml.sax.helpers.*;
+
+import java.util.*;
+import java.io.*;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
 
-import com.thoughtworks.xstream.XStream;
+public class GetPrice extends DefaultHandler {
 
-
-public class getPrice {
-
-	public static void main(String[] args){
+	public static String getElectricityPrice() {
 		String s = new String(); 
 		//private double[] prices = new double[48];
-		XStream xstream = new XStream();
+		//XStream xstream = new XStream();
 
-		s = getPrice("http://reports.ieso.ca/public/DispUnconsHOEP/PUB_DispUnconsHOEP.xml");
+		s = getPrice("http://reports.ieso.ca/public/PredispMktPrice/PUB_PredispMktPrice_20170221_v21.xml");
 
-		String deSerializedPrice =  (String)xstream.fromXML(s);
-
-
-		System.out.println(deSerializedPrice);
-
-
-
+        try {
+            File inputFile = new File("input.txt");
+            SAXParserFactory factory = SAXParserFactory.newInstance();
+            SAXParser saxParser = factory.newSAXParser();
+            UserHandler userhandler = new UserHandler();
+            saxParser.parse(inputFile, userhandler);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+		return s;
 	}
 
 	public static String getPrice(String getURL) {
@@ -56,4 +64,72 @@ public class getPrice {
 
 		return sb.toString();
 	}
+}
+
+class UserHandler extends DefaultHandler {
+
+    boolean bFirstName = false;
+    boolean bLastName = false;
+    boolean bNickName = false;
+    boolean bMarks = false;
+    String rollNo = null;
+
+    @Override
+    public void startElement(String uri,
+                             String localName, String qName, Attributes attributes)
+            throws SAXException {
+
+        if (qName.equalsIgnoreCase("student")) {
+            rollNo = attributes.getValue("rollno");
+        }
+        if(("393").equals(rollNo) &&
+                qName.equalsIgnoreCase("student")){
+            System.out.println("Start Element :" + qName);
+        }
+        if (qName.equalsIgnoreCase("firstname")) {
+            bFirstName = true;
+        } else if (qName.equalsIgnoreCase("lastname")) {
+            bLastName = true;
+        } else if (qName.equalsIgnoreCase("nickname")) {
+            bNickName = true;
+        }
+        else if (qName.equalsIgnoreCase("marks")) {
+            bMarks = true;
+        }
+    }
+
+    @Override
+    public void endElement(String uri,
+                           String localName, String qName) throws SAXException {
+        if (qName.equalsIgnoreCase("student")) {
+            if(("393").equals(rollNo)
+                    && qName.equalsIgnoreCase("student"))
+                System.out.println("End Element :" + qName);
+        }
+    }
+
+
+    @Override
+    public void characters(char ch[],
+                           int start, int length) throws SAXException {
+
+        if (bFirstName && ("393").equals(rollNo)) {
+            //age element, set Employee age
+            System.out.println("First Name: " +
+                    new String(ch, start, length));
+            bFirstName = false;
+        } else if (bLastName && ("393").equals(rollNo)) {
+            System.out.println("Last Name: " +
+                    new String(ch, start, length));
+            bLastName = false;
+        } else if (bNickName && ("393").equals(rollNo)) {
+            System.out.println("Nick Name: " +
+                    new String(ch, start, length));
+            bNickName = false;
+        } else if (bMarks && ("393").equals(rollNo)) {
+            System.out.println("Marks: " +
+                    new String(ch, start, length));
+            bMarks = false;
+        }
+    }
 }
