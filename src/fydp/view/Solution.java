@@ -26,8 +26,8 @@ public class Solution {
         generateElectricityPriceAndCapacity();
 
         // loop to be removed
-        /*for(int i=0; i<48; i++) {
-            chargeCapacity[i]=100;
+        for(int i=0; i<48; i++) {
+            chargeCapacity[i]=6;
         }
         /*
         for (int i = 0; i < 48; i ++) {
@@ -37,16 +37,34 @@ public class Solution {
         initialSolution = CarChargerController.generateRandomCarChargers(num);
 
         // sorts cars based on charging priority
-        Collections.sort(initialSolution, (o1, o2) -> o1.getChargePriority() < o2.getChargePriority() ? 1:-1);
+        Collections.sort(initialSolution, (o1, o2) ->
+                doubleToIntFloor(o2.getChargePriority() - o1.getChargePriority()));
 
         // assigns car charging schedule
         initialSolution = CarChargerController.CarChargerSlotAssign(initialSolution,electricityPrice, chargeCapacity);
     }
 
+    private static int doubleToIntFloor(double num) {
+        if (num < 0) {
+            return (int) num - 1;
+        }
+        else if (num == 0) {
+            return 0;
+        }
+        else {
+            return (int) num + 1;
+        }
+    }
+
     // More realistic electricity price and hourly capacity
     private static void generateElectricityPriceAndCapacity() {
-        double[] electricityPrice24 = {13.92, 13.42, 12.11, 10.98, 9.44, 7.12 , 13.87, 23.58, 26.54, 28.28, 26.11
-        , 25.8, 19.26, 20.92, 26.08, 21.65, 19.90, 31.57, 29.13, 27.26, 26.72, 32.19, 23.58, 14.46};
+        //2017 YTD
+        //double[] electricityPrice24 = {13.92, 13.42, 12.11, 10.98, 9.44, 7.12 , 13.87, 23.58, 26.54, 28.28, 26.11
+        //, 25.8, 19.26, 20.92, 26.08, 21.65, 19.90, 31.57, 29.13, 27.26, 26.72, 32.19, 23.58, 14.46};
+
+        //2015 Year Average
+        double[] electricityPrice24 = {13.56, 11.08, 10.11, 8.87, 10.23, 12.78, 18.84, 30.18, 31.88, 26.40, 27.07,
+        25.44, 23.35, 20.65, 20.96, 28.23, 26.87, 28.30, 30.58, 31.68, 25.55, 23.11, 19.34, 14.88};
 
         for(int i=0; i<48; i++) {
             if (i > 14 && i < 20) {

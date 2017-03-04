@@ -90,7 +90,7 @@ public class MainViewController {
                     series[i].getData().add(new XYChart.Data<>(y, initialSolution.get(i).getChargeRate()));
                 }
                 else {
-                    series[i].getData().add(new XYChart.Data<>(y, currentChargeTime[y]));
+                    series[i].getData().add(new XYChart.Data<>(y, 0));
                 }
             }
             ac[i].getData().addAll(series[i]);
@@ -158,7 +158,7 @@ public class MainViewController {
 
     /** Initializes fields for algorithm and GUI */
     private static void InitializeFields() {
-        Solution.generateInitialSolution(25);
+        Solution.generateInitialSolution(400);
 
         solSize = initialSolution.size();
         tps = new TitledPane[solSize];

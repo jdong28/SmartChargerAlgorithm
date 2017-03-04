@@ -16,6 +16,8 @@ public final class CarChargerController {
         int[] hours_remaining;
         int[] priority= new int[48];
         double[] sorted_price= new double[48];
+        long startTime = System.nanoTime();
+
 
         // sort price and calculate priority list
         for(int i=0; i<48; i++){
@@ -35,7 +37,7 @@ public final class CarChargerController {
         hours_remaining = new int[size];
         for (int i=0;i<size;i++){
             hours_remaining[i]=solution.get(i).getChargeSlots();
-            System.out.println(hours_remaining[i]);
+            //System.out.println(hours_remaining[i]);
         }
 
         // assign time slot
@@ -75,6 +77,13 @@ public final class CarChargerController {
                 }
             }
         }
+
+        long endTime = System.nanoTime();
+
+        double duration = (endTime - startTime)/1000000f ;
+
+        System.out.println(duration);
+
         return solution;
     }
 
@@ -86,7 +95,7 @@ public final class CarChargerController {
             CarCharger carCharger = new CarCharger();
             carChargerList.add(carCharger);
 
-            System.out.println(String.format("Battery level: %f", carCharger.getBatteryLevel()));
+            //System.out.println(String.format("Battery level: %f", carCharger.getBatteryLevel()));
         }
 
         return carChargerList;
