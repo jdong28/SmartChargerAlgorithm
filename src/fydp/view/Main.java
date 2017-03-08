@@ -6,10 +6,14 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.util.Map;
+
 /**
  * Method for running algorithm
  */
 public class Main extends Application{
+
+    public static Map<String, String> parameters;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -17,6 +21,8 @@ public class Main extends Application{
 //        loader.setController(this);
 //        Parent root = loader.load();
         //Scene scene = new Scene(new Group(), 800, 600);
+        parameters = getParameters().getNamed();
+
         Parent root = FXMLLoader.load(getClass().getResource("../../fydp/view/Main.fxml"));
         Scene scene = new Scene(root);
         primaryStage.setTitle("SmartCharger Algorithm");

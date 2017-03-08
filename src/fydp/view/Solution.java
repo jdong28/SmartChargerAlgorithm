@@ -2,6 +2,7 @@ package fydp.view;
 
 import fydp.model.CarCharger;
 import fydp.model.CarChargerController;
+import javafx.collections.ObservableList;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -12,10 +13,14 @@ import java.util.concurrent.ThreadLocalRandom;
  * Created by xiuxu on 2017-02-19.
  */
 public class Solution {
-    public static List<CarCharger> initialSolution;
+    public static ObservableList<CarCharger> initialSolution;
     public static double[] electricityPrice;
     public static int[] chargeCapacity = new int[48];
     private static int capacityFactor = 0;
+
+    public static void recalculateSolution() {
+        initialSolution = CarChargerController.CarChargerSlotAssign(initialSolution,electricityPrice, chargeCapacity);
+    }
 
     public static void generateInitialSolution(int num){
 

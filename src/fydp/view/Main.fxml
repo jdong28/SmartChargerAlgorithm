@@ -4,65 +4,72 @@
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Accordion?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 
-<SplitPane dividerPositions="0.566815144766147" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fydp.controller.MainViewController">
-  <items>
-    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
-         <children>
-            <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-               <center>
-                  <ScrollPane prefHeight="898.0" prefWidth="664.0">
-                     <content>
-                        <Accordion fx:id="fxScheduleAccordion" />
-                     </content>
-                  </ScrollPane>
-               </center>
-               <bottom>
-                  <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-                    <items>
-                      <Button mnemonicParsing="false" text="Add Car" />
-                        <Button mnemonicParsing="false" text="Generate New Cars" />
-                    </items>
-                  </ToolBar>
-               </bottom>
-            </BorderPane>
-         </children></AnchorPane>
-    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
-         <children>
-            <VBox layoutX="64.0" layoutY="349.0" prefHeight="898.0" prefWidth="228.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-               <children>
-                  <LineChart fx:id="priceComparisonChart">
-                    <xAxis>
-                      <NumberAxis side="BOTTOM" />
-                    </xAxis>
-                    <yAxis>
-                      <NumberAxis side="LEFT" />
-                    </yAxis>
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
-                  </LineChart>
-                  <LineChart fx:id="electricityChart">
-                    <xAxis>
-                      <NumberAxis side="BOTTOM" />
-                    </xAxis>
-                    <yAxis>
-                      <NumberAxis side="LEFT" />
-                    </yAxis>
-                  </LineChart>
-                  <Label fx:id="priceBeforeLabel" text="Cost Before:" />
-                  <Label fx:id="priceAfterLabel" text="Cost After:" />
-                  <Label fx:id="priceDifferenceLabel" text="Label" />
-               </children>
-            </VBox>
-         </children></AnchorPane>
-  </items>
-</SplitPane>
+<TabPane xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fydp.controller.MainViewController">
+   <tabs>
+      <Tab closable="false" text="Graph View">
+         <content>
+            <SplitPane dividerPositions="0.566815144766147" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="900.0">
+              <items>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                     <children>
+                        <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <center>
+                              <ScrollPane prefHeight="898.0" prefWidth="664.0">
+                                 <content>
+                                    <Accordion fx:id="fxScheduleAccordion" />
+                                 </content>
+                              </ScrollPane>
+                           </center>
+                        </BorderPane>
+                     </children>
+                  </AnchorPane>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                     <children>
+                        <VBox layoutX="64.0" layoutY="349.0" prefHeight="898.0" prefWidth="228.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <LineChart fx:id="priceComparisonChart">
+                                <xAxis>
+                                  <NumberAxis side="BOTTOM" />
+                                </xAxis>
+                                <yAxis>
+                                  <NumberAxis side="LEFT" />
+                                </yAxis>
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin>
+                              </LineChart>
+                              <LineChart fx:id="electricityChart">
+                                <xAxis>
+                                  <NumberAxis side="BOTTOM" />
+                                </xAxis>
+                                <yAxis>
+                                  <NumberAxis side="LEFT" />
+                                </yAxis>
+                              </LineChart>
+                              <Label fx:id="priceBeforeLabel" text="Cost Before:" />
+                              <Label fx:id="priceAfterLabel" text="Cost After:" />
+                              <Label fx:id="priceDifferenceLabel" text="Label" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </AnchorPane>
+              </items>
+            </SplitPane>
+         </content>
+      </Tab>
+      <Tab closable="false" text="Table View">
+          <content>
+            <fx:include fx:id="tableViewPage" source="TableView.fxml" />
+          </content>
+      </Tab>
+   </tabs>
+</TabPane>

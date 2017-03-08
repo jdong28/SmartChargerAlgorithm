@@ -8,11 +8,19 @@
  */
 package fydp.model;
 
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+
 import java.util.concurrent.ThreadLocalRandom;
 
 import static fydp.view.Solution.electricityPrice;
 
 public class CarCharger{
+    //ID of charger
+    private int carID;
+
     //number of half hour slots
     private int chargeSlots;
 
@@ -45,6 +53,32 @@ public class CarCharger{
     // Time user leaves
     private int endTime;
 
+    private IntegerProperty carIDProperty;
+
+    private DoubleProperty carBatteryLevelProperty;
+
+    public int getCarIDProperty() {
+        carIDProperty.set(carID);
+        return carIDProperty.get();
+    }
+
+    public IntegerProperty carIDPropertyProperty() {
+        return carIDProperty;
+    }
+
+    public double getCarBatteryLevelProperty() {
+        carBatteryLevelProperty.set(batteryLevel);
+        return carBatteryLevelProperty.get();
+    }
+
+    public DoubleProperty carBatteryLevelPropertyProperty() {
+        return carBatteryLevelProperty;
+    }
+
+    public int getCarID() {
+        return carID;
+    }
+
     public double getUnoptimizedChargeCost() {
         return unoptimizedChargeCost;
     }
@@ -67,7 +101,7 @@ public class CarCharger{
 
     public int getChargeSlots() {return chargeSlots;}
 
-    public CarCharger() {
+    public CarCharger(int id) {
         travelDistance = ThreadLocalRandom.current().nextInt(5, 100);
         batteryLevel = ThreadLocalRandom.current().nextDouble(0.1, 1);
         chargeSlots = (int) Math.ceil((1- batteryLevel) * fullChargeTime * 2);
@@ -87,6 +121,12 @@ public class CarCharger{
         chargePriority = (double) chargeSlots/(endTime - startTime);
 
         unoptimizedChargeCost = calculateCost();
+
+        carID = id;
+
+        carIDProperty = new SimpleIntegerProperty(carID);
+        carBatteryLevelProperty = new SimpleDoubleProperty(batteryLevel);
+
     }
 
     /** Calculates how many 30 minutes slots the car requires to fully charge */

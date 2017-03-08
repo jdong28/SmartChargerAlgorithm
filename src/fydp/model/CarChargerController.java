@@ -1,5 +1,8 @@
 package fydp.model;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
@@ -12,7 +15,7 @@ import java.util.Random;
 public final class CarChargerController {
 
 
-    public static List<CarCharger> CarChargerSlotAssign(List<CarCharger> solution, double[] price, int[] capacity){
+    public static ObservableList<CarCharger> CarChargerSlotAssign(ObservableList<CarCharger> solution, double[] price, int[] capacity){
         int[] hours_remaining;
         int[] priority= new int[48];
         double[] sorted_price= new double[48];
@@ -88,11 +91,11 @@ public final class CarChargerController {
     }
 
     /** Generates a list of random car chargers. */
-    public static List<CarCharger> generateRandomCarChargers(int length) {
-       List<CarCharger> carChargerList = new ArrayList<>();
+    public static ObservableList<CarCharger> generateRandomCarChargers(int length) {
+        ObservableList<CarCharger> carChargerList = FXCollections.observableArrayList();
 
         for (int i = 0; i < length; i++){
-            CarCharger carCharger = new CarCharger();
+            CarCharger carCharger = new CarCharger(i);
             carChargerList.add(carCharger);
 
             //System.out.println(String.format("Battery level: %f", carCharger.getBatteryLevel()));

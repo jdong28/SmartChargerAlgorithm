@@ -3,6 +3,7 @@ package fydp.controller;
 import fydp.model.CarCharger;
 import fydp.view.Solution;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.chart.AreaChart;
@@ -11,6 +12,7 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 
+import static fydp.view.Main.parameters;
 import static fydp.view.Solution.electricityPrice;
 import static fydp.view.Solution.initialSolution;
 
@@ -53,7 +55,8 @@ public class MainViewController {
     // runs first
     @FXML
     private void initialize() {
-        InitializeFields();
+        initializeFields();
+        setSolutionListener();
         configureChargingGraphs();
         configureDemandGraph();
         configureElectricityGraph();
@@ -95,10 +98,14 @@ public class MainViewController {
             }
             ac[i].getData().addAll(series[i]);
             ac[i].setLegendVisible(false);
-            String carName = String.format("Car number: %d", i);
+            String carName = String.format("Car number: %d", initialSolution.get(i).getCarID());
             tps[i] = new TitledPane(carName, ac[i]);
         }
         // Setup
+
+        if (!fxScheduleAccordion.getPanes().isEmpty()) {
+            fxScheduleAccordion.getPanes().clear();
+        }
 
         fxScheduleAccordion.getPanes().addAll(tps);
         fxScheduleAccordion.setExpandedPane(tps[0]);
@@ -157,8 +164,12 @@ public class MainViewController {
     }
 
     /** Initializes fields for algorithm and GUI */
-    private static void InitializeFields() {
-        Solution.generateInitialSolution(400);
+    private void initializeFields() {
+        System.out.println(parameters);
+
+
+        //Child controller is called first
+        //Solution.generateInitialSolution(25);
 
         solSize = initialSolution.size();
         tps = new TitledPane[solSize];
@@ -166,5 +177,22 @@ public class MainViewController {
         yAxis = new NumberAxis[solSize];
         ac = new AreaChart[solSize];
         series = new XYChart.Series[initialSolution.size()];
+    }
+
+    private void setSolutionListener() {
+        initialSolution.addListener(new ListChangeListener<CarCharger>() {
+            @Override
+            public void onChanged(Change<? extends CarCharger> c) {
+                initializeFields();
+                refreshGraphs();
+            }
+        });
+    }
+
+    private void refreshGraphs() {
+        Solution.recalculateSolution();
+        configureChargingGraphs();
+        configureDemandGraph();
+        configureDataLabels();
     }
 }
