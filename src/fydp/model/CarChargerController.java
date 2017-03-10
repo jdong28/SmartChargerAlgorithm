@@ -40,6 +40,7 @@ public final class CarChargerController {
         int size = solution.size();
         hours_remaining = new int[size];
         for (int i=0;i<size;i++){
+			// array for hours to be charged remaining for each car, could be done directly at each object if passed by pointer
             hours_remaining[i]=solution.get(i).getChargeSlots();
             //System.out.println(hours_remaining[i]);
         }
@@ -49,17 +50,16 @@ public final class CarChargerController {
         for (int i=0;i<48;i++){
             int timeslot=priority[i];
             //for each car
-            for ( int j=0; j<size; j++){
-                if( capacity[timeslot]==0){
-                    break;
-                }
-                if(solution.get(j).chargeTime[timeslot]==2||hours_remaining[j]==0){
+            for ( int j=0; j<size; j++){ 
+				// if car not here or hours to be charged fully assigned or remaining capacity less than charging rate, continue with the next car
+                if((solution.get(j).chargeTime[timeslot]==2)||(hours_remaining[j]==0)||(capacity[timeslot]<solution.get(j).getChargeRate())){
                     continue;
                 }
+				// else assign a charging slot and decrement hour to be charged and capacity
                 else {
                     solution.get(j).chargeTime[timeslot]=3;
                     hours_remaining[j]--;
-					capacity[timeslot]--;
+					capacity[timeslot]=capacity[timeslot]-solution.get(j).getChargeRate();
                 }
             }
         }
@@ -82,6 +82,7 @@ public final class CarChargerController {
                     if(hours_remaining[k]==0){
                         break;
                     }
+					// might need a decrement on capacity here
                 }
             }
         }
