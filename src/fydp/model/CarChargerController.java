@@ -29,6 +29,7 @@ public final class CarChargerController {
         for(int j=0; j<48; j++){
             for(int k=0; k<48;k++){
                 if (sorted_price[j]==price[k]){
+					price[k]=0;
                     priority[j]=k;
                     break;
                 }
@@ -38,6 +39,7 @@ public final class CarChargerController {
         int size = solution.size();
         hours_remaining = new int[size];
         for (int i=0;i<size;i++){
+			// array for hours to be charged remaining for each car, could be done directly at each object if passed by pointer
             hours_remaining[i]=solution.get(i).getChargeSlots();
             //System.out.println(hours_remaining[i]);
         }
@@ -45,37 +47,43 @@ public final class CarChargerController {
         // assign time slot
         // for each time slot
         for (int i=0;i<48;i++){
-            int slot=priority[i];
-            double capa=capacity[slot];
+
+            int timeslot=priority[i];
+
             //for each car
-            for ( int j=0; j<size; j++){
-                if( capa==0){
-                    break;
-                }
-                if(solution.get(j).chargeTime[slot]==2||hours_remaining[j]==0){
+            for ( int j=0; j<size; j++){ 
+				// if car not here or hours to be charged fully assigned or remaining capacity less than charging rate, continue with the next car
+                if((solution.get(j).chargeTime[timeslot]==2)||(hours_remaining[j]==0)||(capacity[timeslot]<solution.get(j).getChargeRate())){
                     continue;
                 }
+				// else assign a charging slot and decrement hour to be charged and capacity
                 else {
-                    solution.get(j).chargeTime[slot]=3;
+                    solution.get(j).chargeTime[timeslot]=3;
                     hours_remaining[j]--;
+					capacity[timeslot]=capacity[timeslot]-solution.get(j).getChargeRate();
                 }
             }
         }
 
         // for each car
         for (int k=0;k< size; k++){
+			// for each timeslot
             if( hours_remaining[k]!=0){
                 for (int l=0;l<48;l++){
+					// if not here or assigned, continue with the next timeslot
                     if (solution.get(k).chargeTime[l]==2 || solution.get(k).chargeTime[l]==3){
                         continue;
                     }
+					// assign 
                     else {
                         solution.get(k).chargeTime[l]=3;
                         hours_remaining[k]--;
                     }
+					// if all hours taken care, break
                     if(hours_remaining[k]==0){
                         break;
                     }
+					// might need a decrement on capacity here
                 }
             }
         }
