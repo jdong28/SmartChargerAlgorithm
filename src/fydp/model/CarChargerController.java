@@ -15,7 +15,7 @@ import java.util.Random;
 public final class CarChargerController {
 
 
-    public static ObservableList<CarCharger> CarChargerSlotAssign(ObservableList<CarCharger> solution, double[] price, int[] capacity){
+    public static ObservableList<CarCharger> CarChargerSlotAssign(ObservableList<CarCharger> solution, double[] price, double[] capacity){
         int[] hours_remaining;
         int[] priority= new int[48];
         double[] sorted_price= new double[48];
