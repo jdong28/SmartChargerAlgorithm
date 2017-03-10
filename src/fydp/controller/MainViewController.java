@@ -183,14 +183,19 @@ public class MainViewController {
         initialSolution.addListener(new ListChangeListener<CarCharger>() {
             @Override
             public void onChanged(Change<? extends CarCharger> c) {
-                initializeFields();
-                refreshGraphs();
+                while (c.next()) {
+                    // prevents firing on sorting
+                    if (c.wasAdded() || c.wasRemoved()) {
+                        initializeFields();
+                        refreshGraphs();
+                    }
+                }
             }
         });
     }
 
     private void refreshGraphs() {
-        Solution.recalculateSolution();
+        Solution.calculateSolution();
         configureChargingGraphs();
         configureDemandGraph();
         configureDataLabels();
