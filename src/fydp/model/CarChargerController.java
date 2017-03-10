@@ -3,10 +3,9 @@ package fydp.model;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
-import java.util.Random;
+
 /**
  * Calculate price matrix
  * Sort CarChargers
@@ -48,7 +47,9 @@ public final class CarChargerController {
         // assign time slot
         // for each time slot
         for (int i=0;i<48;i++){
+
             int timeslot=priority[i];
+
             //for each car
             for ( int j=0; j<size; j++){ 
 				// if car not here or hours to be charged fully assigned or remaining capacity less than charging rate, continue with the next car

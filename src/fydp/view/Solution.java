@@ -6,7 +6,6 @@ import javafx.collections.ObservableList;
 
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -15,8 +14,8 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Solution {
     public static ObservableList<CarCharger> initialSolution;
     public static double[] electricityPrice;
-    public static int[] chargeCapacity = new int[48];
-    private static int capacityFactor = 0;
+    public static double[] chargeCapacity = new double[48];
+    private static double capacityFactor = 0;
 
     public static void generateInitialSolution(int num){
 
@@ -24,7 +23,7 @@ public class Solution {
 
         // Generate electricity price before generating solution
         electricityPrice = new double[48];
-        generateElectricityPriceAndCapacity();
+        generateElectricityPriceAndCapacity(num);
 
         // loop to be removed
         for(int i=0; i<48; i++) {
@@ -62,7 +61,7 @@ public class Solution {
     }
 
     // More realistic electricity price and hourly capacity
-    private static void generateElectricityPriceAndCapacity() {
+    private static void generateElectricityPriceAndCapacity(int num) {
         //2017 YTD
         //double[] electricityPrice24 = {13.92, 13.42, 12.11, 10.98, 9.44, 7.12 , 13.87, 23.58, 26.54, 28.28, 26.11
         //, 25.8, 19.26, 20.92, 26.08, 21.65, 19.90, 31.57, 29.13, 27.26, 26.72, 32.19, 23.58, 14.46};
@@ -70,6 +69,10 @@ public class Solution {
         //2015 Year Average
         double[] electricityPrice24 = {13.56, 11.08, 10.11, 8.87, 10.23, 12.78, 18.84, 30.18, 31.88, 26.40, 27.07,
         25.44, 23.35, 20.65, 20.96, 28.23, 26.87, 28.30, 30.58, 31.68, 25.55, 23.11, 19.34, 14.88};
+
+        for (int i = 0; i < num; i++) {
+            capacityFactor += ThreadLocalRandom.current().nextDouble(3, 10);
+        }
 
         for(int i=0; i<48; i++) {
             if (i > 14 && i < 20) {
