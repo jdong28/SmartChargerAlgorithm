@@ -1,13 +1,20 @@
 package fydp.controller;
 
 import fydp.model.CarCharger;
+import fydp.view.Main;
 import fydp.view.Solution;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import static fydp.view.Solution.initialSolution;
@@ -48,5 +55,30 @@ public class TableViewController {
     private void handleDeleteCar() {
         int index = carChargerTable.getSelectionModel().getSelectedIndex();
         carChargerTable.getItems().remove(index);
+    }
+
+    @FXML
+    private void handleAddCar() throws Exception{
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(Main.class.getResource("../../fydp/view/CarInputDialog.fxml"));
+        Parent page = loader.load();
+        CarCharger tmpCar = new CarCharger();
+
+        Stage dialogStage = new Stage();
+        dialogStage.setTitle("New Car");
+        dialogStage.initModality(Modality.WINDOW_MODAL);
+        Scene scene = new Scene(page);
+        dialogStage.setScene(scene);
+
+        CarInputDialogController controller = loader.getController();
+        controller.setDialogStage(dialogStage);
+        controller.setCarCharger(tmpCar);
+
+        dialogStage.showAndWait();
+
+        if(controller.isOkClicked()) {
+            carChargerTable.getItems().add(controller.getCarCharger());
+        }
+
     }
 }

@@ -18,10 +18,6 @@ public class Solution {
     public static int[] chargeCapacity = new int[48];
     private static int capacityFactor = 0;
 
-    public static void recalculateSolution() {
-        initialSolution = CarChargerController.CarChargerSlotAssign(initialSolution,electricityPrice, chargeCapacity);
-    }
-
     public static void generateInitialSolution(int num){
 
         capacityFactor = num;
@@ -41,6 +37,10 @@ public class Solution {
 
         initialSolution = CarChargerController.generateRandomCarChargers(num);
 
+        calculateSolution();
+    }
+
+    public static void calculateSolution() {
         // sorts cars based on charging priority
         Collections.sort(initialSolution, (o1, o2) ->
                 doubleToIntFloor(o2.getChargePriority() - o1.getChargePriority()));

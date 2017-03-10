@@ -101,18 +101,11 @@ public class CarCharger{
 
     public int getChargeSlots() {return chargeSlots;}
 
-    public CarCharger(int id) {
-        travelDistance = ThreadLocalRandom.current().nextInt(5, 100);
-        batteryLevel = ThreadLocalRandom.current().nextDouble(0.1, 1);
+    public CarCharger () {
+    }
+
+    public void setFields() {
         chargeSlots = (int) Math.ceil((1- batteryLevel) * fullChargeTime * 2);
-
-        // constant rate for all cars for now
-        chargeRate = 3.3;
-
-        //nextInt upper bound exclusive
-        //use 24 hour notations
-        startTime = ThreadLocalRandom.current().nextInt(6, 11);
-        endTime = ThreadLocalRandom.current().nextInt(15,20);
 
         //assume each car takes 4 hours to charge
         calculateChargeTime();
@@ -122,10 +115,36 @@ public class CarCharger{
 
         unoptimizedChargeCost = calculateCost();
 
-        carID = id;
-
         carIDProperty = new SimpleIntegerProperty(carID);
         carBatteryLevelProperty = new SimpleDoubleProperty(batteryLevel);
+    }
+
+    public CarCharger(int carID, double batteryLevel, int startTime, int endTime, double chargeRate) {
+        this.carID = carID;
+        this.batteryLevel = batteryLevel;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.chargeRate = chargeRate;
+
+        setFields();
+    }
+
+    public CarCharger(int id) {
+        travelDistance = ThreadLocalRandom.current().nextInt(5, 100);
+        batteryLevel = ThreadLocalRandom.current().nextDouble(0.1, 1);
+        //chargeSlots = (int) Math.ceil((1- batteryLevel) * fullChargeTime * 2);
+
+        // constant rate for all cars for now
+        chargeRate = 3.3;
+
+        carID = id;
+
+        //nextInt upper bound exclusive
+        //use 24 hour notations
+        startTime = ThreadLocalRandom.current().nextInt(6, 11);
+        endTime = ThreadLocalRandom.current().nextInt(15, 20);
+
+        setFields();
 
     }
 
