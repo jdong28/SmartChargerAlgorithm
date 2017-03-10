@@ -2,6 +2,7 @@ package fydp.view;
 
 import fydp.controller.CarInputDialogController;
 import fydp.model.CarCharger;
+import fydp.model.ReadConsoleRunnable;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -26,6 +27,7 @@ public class Main extends Application{
         //Scene scene = new Scene(new Group(), 800, 600);
         parameters = getParameters().getNamed();
 
+        (new Thread(new ReadConsoleRunnable())).start();
 
         Parent root = FXMLLoader.load(getClass().getResource("../../fydp/view/Main.fxml"));
         Scene scene = new Scene(root);
