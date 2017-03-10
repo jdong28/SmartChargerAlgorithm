@@ -30,6 +30,7 @@ public final class CarChargerController {
         for(int j=0; j<48; j++){
             for(int k=0; k<48;k++){
                 if (sorted_price[j]==price[k]){
+					price[k]=0;
                     priority[j]=k;
                     break;
                 }
@@ -46,34 +47,38 @@ public final class CarChargerController {
         // assign time slot
         // for each time slot
         for (int i=0;i<48;i++){
-            int slot=priority[i];
-            int capa=capacity[slot];
+            int timeslot=priority[i];
             //for each car
             for ( int j=0; j<size; j++){
-                if( capa==0){
+                if( capacity[timeslot]==0){
                     break;
                 }
-                if(solution.get(j).chargeTime[slot]==2||hours_remaining[j]==0){
+                if(solution.get(j).chargeTime[timeslot]==2||hours_remaining[j]==0){
                     continue;
                 }
                 else {
-                    solution.get(j).chargeTime[slot]=3;
+                    solution.get(j).chargeTime[timeslot]=3;
                     hours_remaining[j]--;
+					capacity[timeslot]--;
                 }
             }
         }
 
         // for each car
         for (int k=0;k< size; k++){
+			// for each timeslot
             if( hours_remaining[k]!=0){
                 for (int l=0;l<48;l++){
+					// if not here or assigned, continue with the next timeslot
                     if (solution.get(k).chargeTime[l]==2 || solution.get(k).chargeTime[l]==3){
                         continue;
                     }
+					// assign 
                     else {
                         solution.get(k).chargeTime[l]=3;
                         hours_remaining[k]--;
                     }
+					// if all hours taken care, break
                     if(hours_remaining[k]==0){
                         break;
                     }
