@@ -3,10 +3,9 @@ package fydp.model;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
-import java.util.Random;
+
 /**
  * Calculate price matrix
  * Sort CarChargers
@@ -15,7 +14,7 @@ import java.util.Random;
 public final class CarChargerController {
 
 
-    public static ObservableList<CarCharger> CarChargerSlotAssign(ObservableList<CarCharger> solution, double[] price, int[] capacity){
+    public static ObservableList<CarCharger> CarChargerSlotAssign(ObservableList<CarCharger> solution, double[] price, double[] capacity){
         int[] hours_remaining;
         int[] priority= new int[48];
         double[] sorted_price= new double[48];
@@ -47,7 +46,7 @@ public final class CarChargerController {
         // for each time slot
         for (int i=0;i<48;i++){
             int slot=priority[i];
-            int capa=capacity[slot];
+            double capa=capacity[slot];
             //for each car
             for ( int j=0; j<size; j++){
                 if( capa==0){
