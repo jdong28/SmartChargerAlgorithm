@@ -1,5 +1,6 @@
 package fydp.model;
 
+import fydp.controller.CarInputDialogController;
 import javafx.application.Platform;
 
 import java.io.BufferedReader;
@@ -18,7 +19,7 @@ public class ReadConsoleRunnable implements Runnable {
             br = new BufferedReader(new InputStreamReader(System.in));
 
             while (true) {
-                System.out.print("Enter vehicle info to be added : add (ID, battery, start, end, charge rate\n");
+                System.out.print("Enter vehicle info to be added : -add (ID, battery, start, end, charge rate\n");
                 String input = br.readLine();
 
                 String sl[] = input.split(" ");
@@ -30,6 +31,7 @@ public class ReadConsoleRunnable implements Runnable {
                     int endTime = Integer.parseInt(sl[4]);
                     double chargeRate = Double.parseDouble(sl[5]);
 
+                    // UI changes must occur on javafx thread.
                     Platform.runLater(new Runnable() {
                         @Override
                         public void run() {
@@ -66,6 +68,9 @@ public class ReadConsoleRunnable implements Runnable {
     private boolean isValid(String[] list) {
         if (list.length != 6) {
             System.out.println("Invalid input");
+            return false;
+        }
+        if (!CarInputDialogController.isInteger(list[1])) {
             return false;
         }
         int carID = Integer.parseInt(list[1]);
