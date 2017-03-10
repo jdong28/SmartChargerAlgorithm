@@ -60,7 +60,7 @@ public class TableViewController {
     @FXML
     private void handleAddCar() throws Exception{
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(Main.class.getResource("../../fydp/view/CarInputDialog.fxml"));
+        loader.setLocation(Main.class.getResource("/fydp/view/CarInputDialog.fxml"));
         Parent page = loader.load();
         CarCharger tmpCar = new CarCharger();
 

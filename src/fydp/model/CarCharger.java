@@ -157,11 +157,6 @@ public class CarCharger{
                 chargeTime[i] = 2;
                 unoptimizedChargeTime[i] = 2;
             }
-            else if (counter < chargeSlots * 2) {
-                chargeTime[i] = 1;
-                unoptimizedChargeTime[i] = 1;
-                counter++;
-            }
             else {
                 chargeTime[i] = 0;
                 unoptimizedChargeTime[i] = 0;
