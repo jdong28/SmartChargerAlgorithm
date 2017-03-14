@@ -1,5 +1,6 @@
 package fydp.controller;
 
+import com.sun.javafx.collections.ObservableListWrapper;
 import fydp.model.CarCharger;
 import fydp.view.Solution;
 import javafx.collections.FXCollections;
@@ -11,6 +12,10 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 import static fydp.view.Main.parameters;
 import static fydp.view.Solution.electricityPrice;
@@ -176,8 +181,7 @@ public class MainViewController {
 
     /** Initializes fields for algorithm and GUI */
     private void initializeFields() {
-        System.out.println(parameters);
-
+        //System.out.println(parameters);
 
         //Child controller is called first
         //Solution.generateInitialSolution(25);
@@ -199,10 +203,19 @@ public class MainViewController {
                     if (c.wasAdded() || c.wasRemoved()) {
                         initializeFields();
                         refreshGraphs();
+                        printSchedules();
                     }
                 }
             }
         });
+    }
+
+    private void printSchedules() {
+        ArrayList<CarCharger> idSortedList = new ArrayList<>(initialSolution);
+        idSortedList.sort((o1, o2) -> (o1.getCarID() - o2.getCarID()));
+        for (CarCharger carCharger : idSortedList) {
+            System.out.println(Arrays.toString(carCharger.chargeTime));
+        }
     }
 
     private void refreshGraphs() {
