@@ -25,10 +25,6 @@ public class Solution {
         electricityPrice = new double[48];
         generateElectricityPriceAndCapacity(num);
 
-        // loop to be removed
-        for(int i=0; i<48; i++) {
-            chargeCapacity[i]=6;
-        }
         /*
         for (int i = 0; i < 48; i ++) {
             electricityPrice[i] = ThreadLocalRandom.current().nextDouble(0, 0.5);
@@ -73,6 +69,8 @@ public class Solution {
         for (int i = 0; i < num; i++) {
             capacityFactor += ThreadLocalRandom.current().nextDouble(3, 10);
         }
+
+        capacityFactor = capacityFactor * 100;
 
         for(int i=0; i<48; i++) {
             if (i > 14 && i < 20) {

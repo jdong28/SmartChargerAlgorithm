@@ -75,6 +75,7 @@ public class MainViewController {
         priceBeforeLabel.setText("Price before: " + Double.toString(costbefore));
         priceAfterLabel.setText("Price after: " + Double.toString(costafter));
         priceDifferenceLabel.setText("Price difference: " + Double.toString(costbefore - costafter));
+        System.out.println("Price difference: " + Double.toString(costbefore - costafter));
     }
 
     private void configureChargingGraphs() {
@@ -103,7 +104,7 @@ public class MainViewController {
                     series[i].getData().add(new XYChart.Data<>(xValue, initialSolution.get(i).getChargeRate()));
                 }
                 else {
-                    series[i].getData().add(new XYChart.Data<>(xValue, 0));
+                    series[i].getData().add(new XYChart.Data<>(xValue, initialSolution.get(i).chargeTime[y]));
                 }
             }
             ac[i].getData().addAll(series[i]);

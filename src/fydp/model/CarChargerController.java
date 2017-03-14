@@ -18,18 +18,29 @@ public final class CarChargerController {
         int[] hours_remaining;
         int[] priority= new int[48];
         double[] sorted_price= new double[48];
+        double [] unsorted_price= new double[48];
         long startTime = System.nanoTime();
-
-
+        double [] car_capacity= new double[48];
+        boolean flag =false;
         // sort price and calculate priority list
         for(int i=0; i<48; i++){
+            unsorted_price[i]=price[i];
             sorted_price[i]=price[i];
+            car_capacity[i]=capacity[i];
         }
         Arrays.sort(sorted_price);
         for(int j=0; j<48; j++){
             for(int k=0; k<48;k++){
-                if (sorted_price[j]==price[k]){
-					price[k]=0;
+                if (sorted_price[j]==unsorted_price[k]){
+                    for (int l=0; l<48;l++) {
+                        if(priority[l]==k){
+                            flag=true;
+                        }
+                    }
+                    if(flag){
+                        flag=false;
+                        continue;
+                    }
                     priority[j]=k;
                     break;
                 }
@@ -53,14 +64,14 @@ public final class CarChargerController {
             //for each car
             for ( int j=0; j<size; j++){ 
 				// if car not here or hours to be charged fully assigned or remaining capacity less than charging rate, continue with the next car
-                if((solution.get(j).chargeTime[timeslot]==2)||(hours_remaining[j]==0)||(capacity[timeslot]<solution.get(j).getChargeRate())){
+                if((solution.get(j).chargeTime[timeslot]==2)||(hours_remaining[j]==0)||(car_capacity[timeslot]<solution.get(j).getChargeRate())){
                     continue;
                 }
 				// else assign a charging slot and decrement hour to be charged and capacity
                 else {
                     solution.get(j).chargeTime[timeslot]=3;
                     hours_remaining[j]--;
-					capacity[timeslot]=capacity[timeslot]-solution.get(j).getChargeRate();
+					car_capacity[timeslot]=car_capacity[timeslot]-solution.get(j).getChargeRate();
                 }
             }
         }
