@@ -5,6 +5,7 @@ import javafx.application.Platform;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Iterator;
 
 import static fydp.view.Solution.initialSolution;
 
@@ -18,7 +19,7 @@ public class ReadConsoleRunnable implements Runnable {
             br = new BufferedReader(new InputStreamReader(System.in));
 
             while (true) {
-                System.out.print("Enter vehicle info to be added : add (ID, battery, start, end, charge rate\n");
+                //System.out.print("Enter vehicle info to be added : add (ID, battery, start, end, charge rate\n");
                 String input = br.readLine();
 
                 String sl[] = input.split(" ");
@@ -38,7 +39,25 @@ public class ReadConsoleRunnable implements Runnable {
                     });
 
 
-                    System.out.println("Car added");
+                    //System.out.println("Car added");
+                }
+
+                if (sl[0].equals("-delete")) {
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            for (int i = 1; i < sl.length; i++) {
+                                int index = Integer.parseInt(sl[i]);
+
+                                for (Iterator<CarCharger> iterator = initialSolution.iterator(); iterator.hasNext(); ) {
+                                    CarCharger next = iterator.next();
+                                    if (next.getCarID() == index) {
+                                        iterator.remove();
+                                    }
+                                }
+                            }
+                        }
+                    });
                 }
 
                 if ("q".equals(input)) {

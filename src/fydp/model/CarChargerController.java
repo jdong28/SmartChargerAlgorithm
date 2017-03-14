@@ -19,7 +19,8 @@ public final class CarChargerController {
         int[] hours_remaining;
         int[] priority= new int[48];
         double[] sorted_price= new double[48];
-        long startTime = System.nanoTime();
+        // for benchmarking execution time
+        //long startTime = System.nanoTime();
 
 
         // sort price and calculate priority list
@@ -83,9 +84,9 @@ public final class CarChargerController {
 
         long endTime = System.nanoTime();
 
-        double duration = (endTime - startTime)/1000000f ;
+        //double duration = (endTime - startTime)/1000000f ;
 
-        System.out.println(duration);
+        //System.out.println(duration);
 
         return solution;
     }

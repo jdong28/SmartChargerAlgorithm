@@ -34,32 +34,36 @@
                   </AnchorPane>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                      <children>
-                        <VBox layoutX="64.0" layoutY="349.0" prefHeight="898.0" prefWidth="228.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                           <children>
-                              <LineChart fx:id="priceComparisonChart">
-                                <xAxis>
-                                  <NumberAxis side="BOTTOM" />
-                                </xAxis>
-                                <yAxis>
-                                  <NumberAxis side="LEFT" />
-                                </yAxis>
-                                 <VBox.margin>
-                                    <Insets />
-                                 </VBox.margin>
-                              </LineChart>
-                              <LineChart fx:id="electricityChart">
-                                <xAxis>
-                                  <NumberAxis side="BOTTOM" />
-                                </xAxis>
-                                <yAxis>
-                                  <NumberAxis side="LEFT" />
-                                </yAxis>
-                              </LineChart>
-                              <Label fx:id="priceBeforeLabel" text="Cost Before:" />
-                              <Label fx:id="priceAfterLabel" text="Cost After:" />
-                              <Label fx:id="priceDifferenceLabel" text="Label" />
-                           </children>
-                        </VBox>
+                        <ScrollPane prefHeight="900.0" prefWidth="387.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <content>
+                              <VBox prefHeight="900.0" prefWidth="387.0">
+                                 <children>
+                                    <LineChart fx:id="priceComparisonChart">
+                                      <xAxis>
+                                        <NumberAxis side="BOTTOM" />
+                                      </xAxis>
+                                      <yAxis>
+                                        <NumberAxis side="LEFT" />
+                                      </yAxis>
+                                       <VBox.margin>
+                                          <Insets />
+                                       </VBox.margin>
+                                    </LineChart>
+                                    <LineChart fx:id="electricityChart">
+                                      <xAxis>
+                                        <NumberAxis side="BOTTOM" />
+                                      </xAxis>
+                                      <yAxis>
+                                        <NumberAxis side="LEFT" />
+                                      </yAxis>
+                                    </LineChart>
+                                    <Label fx:id="priceBeforeLabel" text="Cost Before:" />
+                                    <Label fx:id="priceAfterLabel" text="Cost After:" />
+                                    <Label fx:id="priceDifferenceLabel" text="Label" />
+                                 </children>
+                              </VBox>
+                           </content>
+                        </ScrollPane>
                      </children>
                   </AnchorPane>
               </items>

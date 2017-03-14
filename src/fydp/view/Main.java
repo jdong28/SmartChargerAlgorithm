@@ -29,7 +29,7 @@ public class Main extends Application{
 
         (new Thread(new ReadConsoleRunnable())).start();
 
-        Parent root = FXMLLoader.load(getClass().getResource("../../fydp/view/Main.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/fydp/view/Main.fxml"));
         Scene scene = new Scene(root);
         primaryStage.setTitle("SmartCharger Algorithm");
         // Group root = (Group) scene.getRoot();
