@@ -105,6 +105,8 @@ public class CarCharger{
     }
 
     public void setFields() {
+        fullChargeTime = ThreadLocalRandom.current().nextDouble(3,5);
+
         chargeSlots = (int) Math.ceil((1- batteryLevel) * fullChargeTime * 2);
 
         //assume each car takes 4 hours to charge
@@ -135,7 +137,7 @@ public class CarCharger{
         //chargeSlots = (int) Math.ceil((1- batteryLevel) * fullChargeTime * 2);
 
         // constant rate for all cars for now
-        chargeRate = 3.3;
+        chargeRate = ThreadLocalRandom.current().nextDouble(3, 10);
 
         carID = id;
 
@@ -157,8 +159,7 @@ public class CarCharger{
                 chargeTime[i] = 2;
                 unoptimizedChargeTime[i] = 2;
             }
-            else if (counter < chargeSlots * 2) {
-                chargeTime[i] = 1;
+            else if (counter < chargeSlots) {
                 unoptimizedChargeTime[i] = 1;
                 counter++;
             }

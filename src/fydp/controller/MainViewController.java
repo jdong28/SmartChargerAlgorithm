@@ -85,7 +85,7 @@ public class MainViewController {
     private void configureChargingGraphs() {
         // loop through every car and graph the solution
         for (int i = 0; i < initialSolution.size(); i++) {
-            xAxis[i] = new NumberAxis("Time", 0, 48, 1);
+            xAxis[i] = new NumberAxis("Time", 0, 24, 0.5);
             yAxis[i] = new NumberAxis("Charge Rate (kW)", 1, 10, 1);
             ac[i] = new AreaChart<>(xAxis[i], yAxis[i]);
 
@@ -93,12 +93,22 @@ public class MainViewController {
             double[] currentChargeTime = initialSolution.get(i).chargeTime;
 
             // loop through every half hour
-            for (int y = 0; y < 47; y++) {
+            for (int y = 0; y < 48; y++) {
+                double xValue = 0;
+                // even
+                if ( (y & 1) == 0 ) {
+                    xValue = y/2;
+                }
+                // odd
+                else {
+                    xValue = y/2 + 0.5;
+                }
+
                 if (currentChargeTime[y] == 3) {
-                    series[i].getData().add(new XYChart.Data<>(y, initialSolution.get(i).getChargeRate()));
+                    series[i].getData().add(new XYChart.Data<>(xValue, initialSolution.get(i).getChargeRate()));
                 }
                 else {
-                    series[i].getData().add(new XYChart.Data<>(y, 0));
+                    series[i].getData().add(new XYChart.Data<>(xValue, 0));
                 }
             }
             ac[i].getData().addAll(series[i]);
@@ -125,7 +135,7 @@ public class MainViewController {
         XYChart.Series afterAlgo = new XYChart.Series();
         afterAlgo.setName("Demand after optimization");
 
-        for (int i = 0; i < 47; i++) {
+        for (int i = 0; i < 48; i++) {
 
             double yValueBeforeAlgo = 0;
             double yValueAfterAlgo = 0;
@@ -159,7 +169,7 @@ public class MainViewController {
                 .observableArrayList();
         XYChart.Series elecPrice = new XYChart.Series();
 
-        for (int i = 0; i < 47; i++) {
+        for (int i = 0; i < 48; i++) {
             elecPrice.getData().add(new XYChart.Data<>(i, electricityPrice[i]));
         }
 
