@@ -133,17 +133,17 @@ public class CarCharger{
 
     public CarCharger(int id) {
         travelDistance = ThreadLocalRandom.current().nextInt(5, 100);
-        batteryLevel = ThreadLocalRandom.current().nextDouble(0.1, 1);
+        batteryLevel = ThreadLocalRandom.current().nextDouble(0.3, 0.8);
         //chargeSlots = (int) Math.ceil((1- batteryLevel) * fullChargeTime * 2);
 
         // constant rate for all cars for now
-        chargeRate = ThreadLocalRandom.current().nextDouble(3, 10);
-
+        chargeRate = ThreadLocalRandom.current().nextDouble(10, 20);
+        //chargeRate = 120;
         carID = id;
 
         //nextInt upper bound exclusive
         //use 24 hour notations
-        startTime = ThreadLocalRandom.current().nextInt(6, 11);
+        startTime = ThreadLocalRandom.current().nextInt(7, 10);
         endTime = ThreadLocalRandom.current().nextInt(15, 20);
 
         setFields();

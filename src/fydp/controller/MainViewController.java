@@ -80,14 +80,14 @@ public class MainViewController {
         priceBeforeLabel.setText("Price before: " + Double.toString(costbefore));
         priceAfterLabel.setText("Price after: " + Double.toString(costafter));
         priceDifferenceLabel.setText("Price difference: " + Double.toString(costbefore - costafter));
-        System.out.println("Price difference: " + Double.toString(costbefore - costafter));
+        //System.out.println("Price difference: " + Double.toString(costbefore - costafter));
     }
 
     private void configureChargingGraphs() {
         // loop through every car and graph the solution
         for (int i = 0; i < initialSolution.size(); i++) {
             xAxis[i] = new NumberAxis("Time", 0, 24, 0.5);
-            yAxis[i] = new NumberAxis("Charge Rate (kW)", 1, 10, 1);
+            yAxis[i] = new NumberAxis("Charge Rate (kW)", 1, 22, 1);
             ac[i] = new AreaChart<>(xAxis[i], yAxis[i]);
 
             series[i] = new XYChart.Series();

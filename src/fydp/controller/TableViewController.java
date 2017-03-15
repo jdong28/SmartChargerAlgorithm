@@ -35,7 +35,8 @@ public class TableViewController {
 
     @FXML
     private void initialize() {
-        Solution.generateInitialSolution(25);
+        //Solution generated here because this controller executes first
+        Solution.generateInitialSolution(50);
         initializeTable();
     }
 

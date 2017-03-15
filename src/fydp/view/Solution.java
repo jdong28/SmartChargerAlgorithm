@@ -67,10 +67,11 @@ public class Solution {
         25.44, 23.35, 20.65, 20.96, 28.23, 26.87, 28.30, 30.58, 31.68, 25.55, 23.11, 19.34, 14.88};
 
         for (int i = 0; i < num; i++) {
-            capacityFactor += ThreadLocalRandom.current().nextDouble(3, 10);
+            capacityFactor += ThreadLocalRandom.current().nextDouble(10, 20);
+            //capacityFactor += 120;
         }
 
-        capacityFactor = capacityFactor * 100;
+        //capacityFactor = capacityFactor * 100000;
 
         for(int i=0; i<48; i++) {
             if (i > 14 && i < 20) {
@@ -85,7 +86,12 @@ public class Solution {
             else {
                 chargeCapacity[i] = capacityFactor;
             }
-            electricityPrice[i] = electricityPrice24[i/2] / 1000;
+            if (i == 0 || i == 1) {
+                electricityPrice[i] = electricityPrice24[i+22] / 1000;
+            }
+            else {
+                electricityPrice[i] = electricityPrice24[(i-2)/2] / 1000;
+            }
         }
     }
 
