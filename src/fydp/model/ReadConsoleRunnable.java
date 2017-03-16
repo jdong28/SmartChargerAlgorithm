@@ -7,6 +7,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Iterator;
+import java.util.StringJoiner;
+import java.io.*;
+import java.net.*;
 
 import static fydp.view.Solution.initialSolution;
 
@@ -14,16 +17,31 @@ import static fydp.view.Solution.initialSolution;
  * Created by xiuxu on 2017-03-09.
  */
 public class ReadConsoleRunnable implements Runnable {
-    public void run() {
+    // might need if he isn't already running a background thread to run this.
+//    public static void main (String[] args) throws Exception{
+//        ReadConsoleRunnable SERVER = new ReadConsoleRunnable();
+//        SERVER.run();
+//    }
+    public void run(){
+
+        ServerSocket SRVSOCK = null;
         BufferedReader br = null;
+        Socket SOCK = null;
         try {
-            br = new BufferedReader(new InputStreamReader(System.in));
+            SRVSOCK = new ServerSocket(444);
+            SOCK = SRVSOCK.accept();
+            InputStreamReader IR = new InputStreamReader(SOCK.getInputStream());
+
+
+            // instead of this: br = new BufferedReader(new InputStreamReader(System.in));
+            br = new BufferedReader(IR);
 
             while (true) {
 
                 //System.out.print("Enter vehicle info to be added : add (ID, battery, start, end, charge rate\n");
 
                 String input = br.readLine();
+
 
                 String sl[] = input.split(" ");
 
