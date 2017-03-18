@@ -6,12 +6,15 @@ import javafx.application.Platform;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.StringJoiner;
 import java.io.*;
 import java.net.*;
-
 import static fydp.view.Solution.initialSolution;
+
+import org.json.simple.JSONObject;
 
 /**
  * Created by xiuxu on 2017-03-09.
@@ -36,7 +39,7 @@ public class ReadConsoleRunnable implements Runnable {
             // instead of this: br = new BufferedReader(new InputStreamReader(System.in));
             br = new BufferedReader(IR);
 
-            while (true) {
+            //while (true) {
 
                 //System.out.print("Enter vehicle info to be added : add (ID, battery, start, end, charge rate\n");
 
@@ -89,18 +92,39 @@ public class ReadConsoleRunnable implements Runnable {
 
                 //System.out.println("input : " + input);
                 //System.out.println("-----------\n");
-            }
+            //}
 
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            if (br != null) {
                 try {
+                    if (SOCK.isConnected() == true){
+                        PrintStream PS = new PrintStream(SOCK.getOutputStream());
+                        ArrayList<CarCharger> idSortedList = new ArrayList<>(initialSolution);
+                        idSortedList.sort((o1, o2) -> (o1.getCarID() - o2.getCarID()));
+                        //PS.println(Arrays.toString(carCharger.chargeTime));
+                        // TODO: add loop to output into database the list of cars
+                        JSONObject dataSet = new JSONObject();
+
+                        for (CarCharger carCharger : idSortedList) {
+                        dataSet.put(carCharger.getCarID(),Arrays.toString(carCharger.chargeTime));
+
+                        //System.out.println(carCharger.getCarID());
+                        //System.out.println(Arrays.toString(carCharger.chargeTime));
+
+                        }
+                        PS.println(dataSet);
+                    }
                     br.close();
+                    SOCK.close();
+                    SRVSOCK.close();
+
+                    run();
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            }
+
         }
     }
 
