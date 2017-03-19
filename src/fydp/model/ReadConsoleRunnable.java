@@ -28,58 +28,58 @@ public class ReadConsoleRunnable implements Runnable {
         BufferedReader br = null;
         Socket SOCK = null;
         try {
+            //System.out.println("open properly\n");
             SRVSOCK = new ServerSocket(444);
             SOCK = SRVSOCK.accept();
             InputStreamReader IR = new InputStreamReader(SOCK.getInputStream());
-
+            String input = "";
 
             // instead of this: br = new BufferedReader(new InputStreamReader(System.in));
             br = new BufferedReader(IR);
 
-            while (true) {
-
-                //System.out.print("Enter vehicle info to be added : add (ID, battery, start, end, charge rate\n");
-
-                String input = br.readLine();
+            while ((input = br.readLine()) != null) {
 
 
-                String sl[] = input.split(" ");
+                if (input != null) {
+                    String sl[] = input.split(" ");
 
-                if (sl[0].equals("-add") && isValid(sl)) {
-                    int carID = Integer.parseInt(sl[1]);
-                    double batteryLevel = Double.parseDouble(sl[2]);
-                    int startTime = Integer.parseInt(sl[3]);
-                    int endTime = Integer.parseInt(sl[4]);
-                    double chargeRate = Double.parseDouble(sl[5]);
+                    if (sl[0].equals("-add") && isValid(sl)) {
+                        int carID = Integer.parseInt(sl[1]);
+                        double batteryLevel = Double.parseDouble(sl[2]);
+                        int startTime = Integer.parseInt(sl[3]);
+                        int endTime = Integer.parseInt(sl[4]);
+                        double chargeRate = Double.parseDouble(sl[5]);
 
-                    // UI changes must occur on javafx thread.
-                    Platform.runLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            initialSolution.add(new CarCharger(carID, batteryLevel, startTime, endTime, chargeRate));  // Update UI here.
-                        }
-                    });
+                        // UI changes must occur on javafx thread.
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                initialSolution.add(new CarCharger(carID, batteryLevel, startTime, endTime, chargeRate));  // Update UI here.
+                            }
+                        });
 
 
-                    //System.out.println("Car added");
-                }
+                        //System.out.println("Car added");
+                    }
 
-                if (sl[0].equals("-delete")) {
-                    Platform.runLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            for (int i = 1; i < sl.length; i++) {
-                                int index = Integer.parseInt(sl[i]);
+                    if (sl[0].equals("-delete")) {
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                for (int i = 1; i < sl.length; i++) {
+                                    int index = Integer.parseInt(sl[i]);
 
-                                for (Iterator<CarCharger> iterator = initialSolution.iterator(); iterator.hasNext(); ) {
-                                    CarCharger next = iterator.next();
-                                    if (next.getCarID() == index) {
-                                        iterator.remove();
+                                    for (Iterator<CarCharger> iterator = initialSolution.iterator(); iterator.hasNext(); ) {
+                                        CarCharger next = iterator.next();
+                                        if (next.getCarID() == index) {
+                                            iterator.remove();
+                                        }
                                     }
                                 }
                             }
-                        }
-                    });
+                        });
+
+                    }
                 }
 
                 if ("q".equals(input)) {
@@ -90,13 +90,17 @@ public class ReadConsoleRunnable implements Runnable {
                 //System.out.println("input : " + input);
                 //System.out.println("-----------\n");
             }
+            br.close();
+            SOCK.close();
 
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            if (br != null) {
+
+            if (br == null) {
                 try {
                     br.close();
+                    SOCK.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
