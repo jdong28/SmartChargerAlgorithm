@@ -25,6 +25,10 @@ public class ReadConsoleRunnable implements Runnable {
 //        ReadConsoleRunnable SERVER = new ReadConsoleRunnable();
 //        SERVER.run();
 //    }
+
+    public int charge;
+    public int chargerate;
+    public int chargeslots;
     public void run(){
 
         ServerSocket SRVSOCK = null;
@@ -41,89 +45,114 @@ public class ReadConsoleRunnable implements Runnable {
 
             //while (true) {
 
-                //System.out.print("Enter vehicle info to be added : add (ID, battery, start, end, charge rate\n");
+            //System.out.print("Enter vehicle info to be added : add (ID, battery, start, end, charge rate\n");
 
-                String input = br.readLine();
-
-
-                String sl[] = input.split(" ");
-
-                if (sl[0].equals("-add") && isValid(sl)) {
-                    int carID = Integer.parseInt(sl[1]);
-                    double batteryLevel = Double.parseDouble(sl[2]);
-                    int startTime = Integer.parseInt(sl[3]);
-                    int endTime = Integer.parseInt(sl[4]);
-                    double chargeRate = Double.parseDouble(sl[5]);
-
-                    // UI changes must occur on javafx thread.
-                    Platform.runLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            initialSolution.add(new CarCharger(carID, batteryLevel, startTime, endTime, chargeRate));  // Update UI here.
-                        }
-                    });
+            String input = br.readLine();
 
 
-                    //System.out.println("Car added");
-                }
+            String sl[] = input.split(" ");
 
-                if (sl[0].equals("-delete")) {
-                    Platform.runLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            for (int i = 1; i < sl.length; i++) {
-                                int index = Integer.parseInt(sl[i]);
+            if (sl[0].equals("-add") && isValid(sl)) {
+                int carID = Integer.parseInt(sl[1]);
+                double batteryLevel = Double.parseDouble(sl[2]);
+                int startTime = Integer.parseInt(sl[3]);
+                int endTime = Integer.parseInt(sl[4]);
+                double chargeRate = Double.parseDouble(sl[5]);
 
-                                for (Iterator<CarCharger> iterator = initialSolution.iterator(); iterator.hasNext(); ) {
-                                    CarCharger next = iterator.next();
-                                    if (next.getCarID() == index) {
-                                        iterator.remove();
-                                    }
+                // UI changes must occur on javafx thread.
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        initialSolution.add(new CarCharger(carID, batteryLevel, startTime, endTime, chargeRate));  // Update UI here.
+                    }
+                });
+
+
+                //System.out.println("Car added");
+            }
+            charge = 0;
+            if (sl[0].equals("-charge")){
+                charge = 1;
+            }
+
+            chargerate = 0;
+            if (sl[0].equals("-chargerate")){
+                chargerate = 1;
+            }
+            chargeslots = 0;
+            if (sl[0].equals("-chargeslots")){
+                chargeslots = 1;
+            }
+
+            if (sl[0].equals("-delete")) {
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        for (int i = 1; i < sl.length; i++) {
+                            int index = Integer.parseInt(sl[i]);
+
+                            for (Iterator<CarCharger> iterator = initialSolution.iterator(); iterator.hasNext(); ) {
+                                CarCharger next = iterator.next();
+                                if (next.getCarID() == index) {
+                                    iterator.remove();
                                 }
                             }
                         }
-                    });
-                }
+                    }
+                });
+            }
 
-                if ("q".equals(input)) {
-                    System.out.println("Exit!");
-                    //System.exit(0);
-                }
+            if ("q".equals(input)) {
+                System.out.println("Exit!");
+                //System.exit(0);
+            }
 
-                //System.out.println("input : " + input);
-                //System.out.println("-----------\n");
+            //System.out.println("input : " + input);
+            //System.out.println("-----------\n");
             //}
 
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-                try {
-                    if (SOCK.isConnected() == true){
-                        PrintStream PS = new PrintStream(SOCK.getOutputStream());
-                        ArrayList<CarCharger> idSortedList = new ArrayList<>(initialSolution);
-                        idSortedList.sort((o1, o2) -> (o1.getCarID() - o2.getCarID()));
-                        //PS.println(Arrays.toString(carCharger.chargeTime));
-                        // TODO: add loop to output into database the list of cars
-                        JSONObject dataSet = new JSONObject();
+            try {
+                if (SOCK.isConnected() == true){
 
-                        for (CarCharger carCharger : idSortedList) {
+                    PrintStream PS = new PrintStream(SOCK.getOutputStream());
+
+
+                    ArrayList<CarCharger> idSortedList = new ArrayList<>(initialSolution);
+                    idSortedList.sort((o1, o2) -> (o1.getCarID() - o2.getCarID()));
+                    //PS.println(Arrays.toString(carCharger.chargeTime));
+                    // TODO: add loop to output into database the list of cars
+                    JSONObject dataSet = new JSONObject();
+
+                    for (CarCharger carCharger : idSortedList) {
+                        //dataSet.put(carCharger.getCarID(),Arrays.toString(carCharger.batteryProgress));
                         dataSet.put(carCharger.getCarID(),Arrays.toString(carCharger.chargeTime));
-
+                        if (charge == 1) {
+                            dataSet.put(carCharger.getCarID(), Double.toString(carCharger.getBatteryLevel()));
+                        }
+                        if (chargerate == 1){
+                            dataSet.put(carCharger.getCarID(), Double.toString(carCharger.getChargeRate()));
+                        }
+                        if (chargeslots == 1){
+                            dataSet.put(carCharger.getCarID(), Integer.toString(carCharger.getChargeSlots()));
+                        }
                         //System.out.println(carCharger.getCarID());
                         //System.out.println(Arrays.toString(carCharger.chargeTime));
 
-                        }
-                        PS.println(dataSet);
                     }
-                    br.close();
-                    SOCK.close();
-                    SRVSOCK.close();
-
-                    run();
-
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    PS.println(dataSet);
                 }
+                br.close();
+                SOCK.close();
+                SRVSOCK.close();
+
+                run();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
         }
     }

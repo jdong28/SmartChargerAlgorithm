@@ -49,7 +49,16 @@ public class TableViewController {
         TableColumn<CarCharger, Double> carBatteryLevelColumn = new TableColumn<>("Battery Level");
         carBatteryLevelColumn.setCellValueFactory(new PropertyValueFactory<>("carBatteryLevelProperty"));
 
-        carChargerTable.getColumns().setAll(carIDColumn, carBatteryLevelColumn);
+        TableColumn<CarCharger, Double> startTimeColumn = new TableColumn<>("Start Time");
+        startTimeColumn.setCellValueFactory(new PropertyValueFactory<>("startTimeProperty"));
+
+        TableColumn<CarCharger, Double> endTimeColumn = new TableColumn<>("End Time");
+        endTimeColumn.setCellValueFactory(new PropertyValueFactory<>("endTimeProperty"));
+
+        //TableColumn<CarCharger, Double> chargeTimesColumn = new TableColumn<>("Charge Times");
+        //chargeTimesColumn.setCellValueFactory(new PropertyValueFactory<>("chargeTimesProperty"));
+
+        carChargerTable.getColumns().setAll(carIDColumn, carBatteryLevelColumn, startTimeColumn, endTimeColumn);
     }
 
     @FXML

@@ -1,143 +1,266 @@
-package fydp.model;
+package fydp.controller;
 
-import fydp.controller.CarInputDialogController;
-import javafx.application.Platform;
+import com.sun.javafx.collections.ObservableListWrapper;
+import fydp.model.CarCharger;
+import fydp.view.Solution;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.scene.chart.AreaChart;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
+import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Iterator;
-import java.util.StringJoiner;
-import java.io.*;
-import java.net.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
+import static fydp.view.Main.parameters;
+import static fydp.view.Solution.electricityPrice;
 import static fydp.view.Solution.initialSolution;
 
-/**
- * Created by xiuxu on 2017-03-09.
- */
-public class ReadConsoleRunnable implements Runnable {
-    // might need if he isn't already running a background thread to run this.
-//    public static void main (String[] args) throws Exception{
-//        ReadConsoleRunnable SERVER = new ReadConsoleRunnable();
-//        SERVER.run();
-//    }
-    public void run(){
+public class MainViewController {
+    private static int solSize;
 
-        ServerSocket SRVSOCK = null;
-        BufferedReader br = null;
-        Socket SOCK = null;
-        try {
-            SRVSOCK = new ServerSocket(444);
-            SOCK = SRVSOCK.accept();
-            InputStreamReader IR = new InputStreamReader(SOCK.getInputStream());
+    private static TitledPane[] tps;
+
+    // each graph needs its own x-y axis values
+    private static NumberAxis[] xAxis;
+    private static NumberAxis[] yAxis;
+
+    // may change to LineChart
+    private static AreaChart<Number, Number>[] ac;
+
+    // charging schedule of each car
+    private static XYChart.Series[] series;
 
 
-            // instead of this: br = new BufferedReader(new InputStreamReader(System.in));
-            br = new BufferedReader(IR);
+    private static double[] demandBefore = new double[48];
+    private static double[] demandAfter = new double[48];
 
-            //while (true) {
-
-                //System.out.print("Enter vehicle info to be added : add (ID, battery, start, end, charge rate\n");
-
-                String input = br.readLine();
-
-
-                String sl[] = input.split(" ");
-
-                if (sl[0].equals("-add") && isValid(sl)) {
-                    int carID = Integer.parseInt(sl[1]);
-                    double batteryLevel = Double.parseDouble(sl[2]);
-                    int startTime = Integer.parseInt(sl[3]);
-                    int endTime = Integer.parseInt(sl[4]);
-                    double chargeRate = Double.parseDouble(sl[5]);
-
-                    // UI changes must occur on javafx thread.
-                    Platform.runLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            initialSolution.add(new CarCharger(carID, batteryLevel, startTime, endTime, chargeRate));  // Update UI here.
-                        }
-                    });
+    // javafx fields
+    @FXML
+    private VBox carScheduleVBox;
+    @FXML
+    private Accordion fxScheduleAccordion;
+    @FXML
+    private LineChart<Number, Number> priceComparisonChart;
+    @FXML
+    private LineChart<Number, Number> electricityChart;
+    @FXML
+    private ListView<String> dataListView;
+    @FXML
+    private Label priceBeforeLabel;
+    @FXML
+    private Label priceAfterLabel;
+    @FXML
+    private Label priceDifferenceLabel;
 
 
-                    //System.out.println("Car added");
+    // runs first
+    @FXML
+    private void initialize() {
+        initializeFields();
+        setSolutionListener();
+        configureChargingGraphs();
+        configureDemandGraph();
+        configureElectricityGraph();
+        //String teststring = GetPrice.getElectricityPrice();
+        configureDataLabels();
+    }
+
+    private void configureDataLabels() {
+        double costbefore = 0;
+        double costafter = 0;
+        for (int i = 0; i < 48; i++) {
+            costbefore = costbefore + demandBefore[i] * electricityPrice[i];
+            costafter = costafter + demandAfter[i] * electricityPrice[i];
+        }
+
+        priceBeforeLabel.setText("Price before: " + Double.toString(costbefore));
+        priceAfterLabel.setText("Price after: " + Double.toString(costafter));
+        priceDifferenceLabel.setText("Price difference: " + Double.toString(costbefore - costafter));
+        //System.out.println("Price difference: " + Double.toString(costbefore - costafter));
+    }
+
+    private void configureChargingGraphs() {
+        // loop through every car and graph the solution
+        for (int i = 0; i < initialSolution.size(); i++) {
+            xAxis[i] = new NumberAxis("Time", 0, 24, 0.5);
+            yAxis[i] = new NumberAxis("Charge Rate (kW)", 1, 22, 1);
+            ac[i] = new AreaChart<>(xAxis[i], yAxis[i]);
+
+            series[i] = new XYChart.Series();
+            double[] currentChargeTime = initialSolution.get(i).chargeTime;
+
+            // loop through every half hour
+            for (int y = 0; y < 48; y++) {
+                double xValue = 0;
+                // even
+                if ( (y & 1) == 0 ) {
+                    xValue = y/2;
+                }
+                // odd
+                else {
+                    xValue = y/2 + 0.5;
                 }
 
-                if (sl[0].equals("-delete")) {
-                    Platform.runLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            for (int i = 1; i < sl.length; i++) {
-                                int index = Integer.parseInt(sl[i]);
-
-                                for (Iterator<CarCharger> iterator = initialSolution.iterator(); iterator.hasNext(); ) {
-                                    CarCharger next = iterator.next();
-                                    if (next.getCarID() == index) {
-                                        iterator.remove();
-                                    }
-                                }
-                            }
-                        }
-                    });
+                if (currentChargeTime[y] == 3) {
+                    series[i].getData().add(new XYChart.Data<>(xValue, initialSolution.get(i).getChargeRate()));
                 }
-
-                if ("q".equals(input)) {
-                    System.out.println("Exit!");
-                    //System.exit(0);
+                else {
+                    series[i].getData().add(new XYChart.Data<>(xValue, initialSolution.get(i).chargeTime[y]));
                 }
+            }
+            ac[i].getData().addAll(series[i]);
+            ac[i].setLegendVisible(false);
+            String carName = String.format("Car number: %d", initialSolution.get(i).getCarID());
+            tps[i] = new TitledPane(carName, ac[i]);
+        }
+        // Setup
+        if (!carScheduleVBox.getChildren().isEmpty()) {
+            carScheduleVBox.getChildren().clear();
+        }
 
-                //System.out.println("input : " + input);
-                //System.out.println("-----------\n");
-            //}
+        carScheduleVBox.getChildren().addAll(tps);
+        ((TitledPane) carScheduleVBox.getChildren().get(1)).setExpanded(true);
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-                try {
-                    br.close();
-                    SOCK.close();
-                    SRVSOCK.close();
-                    run();
+//        if (!fxScheduleAccordion.getPanes().isEmpty()) {
+//            fxScheduleAccordion.getPanes().clear();
+//        }
+//
+//        fxScheduleAccordion.getPanes().addAll(tps);
+//        fxScheduleAccordion.setExpandedPane(tps[0]);
+    }
 
-                } catch (IOException e) {
-                    e.printStackTrace();
+    private void configureDemandGraph() {
+        ObservableList<XYChart.Series<Number, Number>> data = FXCollections
+                .observableArrayList();
+
+        XYChart.Series beforeAlgo = new XYChart.Series();
+        beforeAlgo.setName("Demand before optimization");
+        XYChart.Series afterAlgo = new XYChart.Series();
+        afterAlgo.setName("Demand after optimization");
+
+        NumberAxis xAxis = (NumberAxis) priceComparisonChart.getXAxis();
+        xAxis.setAutoRanging(false);
+        xAxis.setLowerBound(0);
+        xAxis.setUpperBound(24);
+        xAxis.setTickUnit(0.5);
+
+        for (int i = 0; i < 48; i++) {
+
+            double yValueBeforeAlgo = 0;
+            double yValueAfterAlgo = 0;
+
+            double xValue = 0;
+            // even
+            if ( (i & 1) == 0 ) {
+                xValue = i/2;
+            }
+            // odd
+            else {
+                xValue = i/2 + 0.5;
+            }
+
+            // loop through every car
+            for (int j = 0; j < solSize; j ++) {
+                CarCharger currentCar = initialSolution.get(j);
+                // within charging period
+                if (currentCar.unoptimizedChargeTime[i] == 1) {
+                    yValueBeforeAlgo = yValueBeforeAlgo + currentCar.getChargeRate();
                 }
+                if (currentCar.chargeTime[i] == 3) {
+                    yValueAfterAlgo = yValueAfterAlgo + currentCar.getChargeRate();
+                }
+            }
+            beforeAlgo.getData().add(new XYChart.Data<>(xValue, yValueBeforeAlgo));
 
+            afterAlgo.getData().add(new XYChart.Data<>(xValue, yValueAfterAlgo));
+
+            demandBefore[i] = yValueBeforeAlgo;
+            demandAfter[i] = yValueAfterAlgo;
+        }
+        data.addAll(beforeAlgo, afterAlgo);
+        priceComparisonChart.setData(data);
+        priceComparisonChart.setTitle("Demand Comparison");
+    }
+
+    private void configureElectricityGraph() {
+        ObservableList<XYChart.Series<Number, Number>> data = FXCollections
+                .observableArrayList();
+        XYChart.Series elecPrice = new XYChart.Series();
+
+        NumberAxis xAxis = (NumberAxis) electricityChart.getXAxis();
+        xAxis.setAutoRanging(false);
+        xAxis.setLowerBound(0);
+        xAxis.setUpperBound(24);
+        xAxis.setTickUnit(0.5);
+
+        for (int i = 0; i < 48; i++) {
+            double xValue = 0;
+            // even
+            if ( (i & 1) == 0 ) {
+                xValue = i/2;
+            }
+            // odd
+            else {
+                xValue = i/2 + 0.5;
+            }
+            elecPrice.getData().add(new XYChart.Data<>(xValue, electricityPrice[i]));
+        }
+
+        data.addAll(elecPrice);
+        electricityChart.setData(data);
+        electricityChart.setTitle("Electricity Price");
+    }
+
+    /** Initializes fields for algorithm and GUI */
+    private void initializeFields() {
+        //System.out.println(parameters);
+
+        //Child controller is called first
+        //Solution.generateInitialSolution(25);
+
+        solSize = initialSolution.size();
+        tps = new TitledPane[solSize];
+        xAxis = new NumberAxis[solSize];
+        yAxis = new NumberAxis[solSize];
+        ac = new AreaChart[solSize];
+        series = new XYChart.Series[initialSolution.size()];
+    }
+
+    private void setSolutionListener() {
+        initialSolution.addListener(new ListChangeListener<CarCharger>() {
+            @Override
+            public void onChanged(Change<? extends CarCharger> c) {
+                while (c.next()) {
+                    // prevents firing on sorting
+                    if (c.wasAdded() || c.wasRemoved()) {
+                        initializeFields();
+                        refreshGraphs();
+                        //printSchedules();
+                    }
+                }
+            }
+        });
+    }
+
+    private void printSchedules() {
+        //ArrayList<CarCharger> idSortedList = new ArrayList<>(initialSolution);
+        //idSortedList.sort((o1, o2) -> (o1.getCarID() - o2.getCarID()));
+        for (CarCharger carCharger : initialSolution) {
+            System.out.println(Arrays.toString(carCharger.chargeTime));
         }
     }
 
-    private boolean isValid(String[] list) {
-        if (list.length != 6) {
-            System.out.println("Invalid input");
-            return false;
-        }
-        if (!CarInputDialogController.isInteger(list[1])) {
-            return false;
-        }
-        int carID = Integer.parseInt(list[1]);
-        double batteryLevel = Double.parseDouble(list[2]);
-        int startTime = Integer.parseInt(list[3]);
-        int endTime = Integer.parseInt(list[4]);
-        double chargeRate = Double.parseDouble(list[5]);
-
-        for (CarCharger car : initialSolution) {
-            if (car.getCarID() == carID) {
-                System.out.println("Duplicate Car ID");
-                return false;
-            }
-        }
-
-        if (batteryLevel < 0 || batteryLevel > 1) {
-            System.out.println("Invalid battery level");
-            return false;
-        }
-
-        if (startTime < 1 || startTime > 48 || endTime < 1 || endTime > 48 || startTime > endTime) {
-            System.out.println("Invalid times");
-            return false;
-        }
-
-        return true;
+    private void refreshGraphs() {
+        Solution.calculateSolution();
+        configureChargingGraphs();
+        configureDemandGraph();
+        configureDataLabels();
     }
 }

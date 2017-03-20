@@ -8,10 +8,7 @@
  */
 package fydp.model;
 
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.*;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -36,6 +33,8 @@ public class CarCharger{
     //chargeTime that is not optimized
     public double[] unoptimizedChargeTime = new double[48];
 
+    public double[] batteryProgress = new double[48];
+
     private double unoptimizedChargeCost = 0;
 
     //Range of travel
@@ -52,6 +51,48 @@ public class CarCharger{
 
     // Time user leaves
     private int endTime;
+
+    private DoubleProperty startTimeProperty;
+
+    private DoubleProperty endTimeProperty;
+
+    private StringProperty chargeTimes = new SimpleStringProperty();
+
+    public String getChargeTimes() {
+        return chargeTimesProperty().get();
+    }
+
+    public StringProperty chargeTimesProperty() {
+        if (chargeTimes == null) {
+            String times = "t";
+            for (int i = 0; i < chargeTime.length; i++) {
+                //if (chargeTime[i] == 3) {
+                    times = times + ", " + Double.toString((double)i/2.0);
+                //}
+            }
+            chargeTimes = new SimpleStringProperty(times);
+        }
+
+        return chargeTimes;
+    }
+
+    public void setChargeTimes(String value) {
+        chargeTimesProperty().setValue(value);
+    }
+
+    public double getStartTimeProperty() {
+        startTimeProperty.set((double)startTime/2.0);
+        return startTimeProperty.get();
+    }
+
+    public DoubleProperty startTimePropertyProperty() { return startTimeProperty; }
+
+    public DoubleProperty endTimePropertyProperty() { return endTimeProperty; }
+
+    public double getEndTimeProperty() {
+        endTimeProperty.set((double)endTime/2.0);
+        return endTimeProperty.get();
+    }
 
     private IntegerProperty carIDProperty;
 
@@ -87,6 +128,12 @@ public class CarCharger{
         return startTime;
     }
 
+    public int getEndTime() {
+        return endTime;
+    }
+
+    public double getFullChargeTime() { return fullChargeTime; }
+
     public double getBatteryLevel() {
         return batteryLevel;
     }
@@ -119,6 +166,8 @@ public class CarCharger{
 
         carIDProperty = new SimpleIntegerProperty(carID);
         carBatteryLevelProperty = new SimpleDoubleProperty(batteryLevel);
+        startTimeProperty = new SimpleDoubleProperty((double)startTime/2.0);
+        endTimeProperty = new SimpleDoubleProperty((double)endTime/2.0);
     }
 
     public CarCharger(int carID, double batteryLevel, int startTime, int endTime, double chargeRate) {
@@ -142,9 +191,9 @@ public class CarCharger{
         carID = id;
 
         //nextInt upper bound exclusive
-        //use 24 hour notations
-        startTime = ThreadLocalRandom.current().nextInt(7, 10);
-        endTime = ThreadLocalRandom.current().nextInt(15, 20);
+        //use 48 hour notations
+        startTime = ThreadLocalRandom.current().nextInt(14, 21);
+        endTime = ThreadLocalRandom.current().nextInt(30, 41);
 
         setFields();
 
@@ -155,7 +204,7 @@ public class CarCharger{
         int counter = 0;
 
         for (int i = 0; i < 48; i ++) {
-            if (i < startTime * 2 || i > endTime * 2) {
+            if (i < startTime || i > endTime) {
                 chargeTime[i] = 2;
                 unoptimizedChargeTime[i] = 2;
             }
