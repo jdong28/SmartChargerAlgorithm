@@ -3,7 +3,6 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
-<?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SplitPane?>
@@ -23,9 +22,9 @@
                      <children>
                         <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <center>
-                              <ScrollPane prefHeight="898.0" prefWidth="664.0">
+                              <ScrollPane prefHeight="898.0" prefWidth="664.0" vbarPolicy="ALWAYS">
                                  <content>
-                                    <Accordion fx:id="fxScheduleAccordion" />
+                                    <VBox fx:id="carScheduleVBox" />
                                  </content>
                               </ScrollPane>
                            </center>

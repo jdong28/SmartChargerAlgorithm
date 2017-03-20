@@ -34,7 +34,7 @@ public class Main extends Application{
         primaryStage.setTitle("SmartCharger Algorithm");
         // Group root = (Group) scene.getRoot();
         // root.getChildren().add(accordion);
-        primaryStage.setMaximized(true);
+        //primaryStage.setMaximized(true);
         primaryStage.setScene(scene);
         primaryStage.show();
     }

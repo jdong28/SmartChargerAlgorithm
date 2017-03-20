@@ -4,6 +4,7 @@ import fydp.model.CarCharger;
 import fydp.model.CarChargerController;
 import javafx.collections.ObservableList;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.concurrent.ThreadLocalRandom;
@@ -42,6 +43,25 @@ public class Solution {
 
         // assigns car charging schedule
         initialSolution = CarChargerController.CarChargerSlotAssign(initialSolution,electricityPrice, chargeCapacity);
+
+        // sort back into carID
+        initialSolution.sort((o1, o2) -> (o1.getCarID() - o2.getCarID()));
+
+        // calculate battery progress at each half hour
+        for (CarCharger carCharger : initialSolution) {
+            double progressValue = (1 - carCharger.getBatteryLevel()) / carCharger.getChargeSlots();
+
+            carCharger.batteryProgress[carCharger.getStartTime()] = carCharger.getBatteryLevel();
+            for (int i = carCharger.getStartTime()+1; i < carCharger.getEndTime(); i++) {
+                // charging
+                if (carCharger.chargeTime[i] == 3) {
+                    carCharger.batteryProgress[i] = carCharger.batteryProgress[i-1] + progressValue;
+                }
+                else {
+                    carCharger.batteryProgress[i] = carCharger.batteryProgress[i-1];
+                }
+            }
+        }
     }
 
     private static int doubleToIntFloor(double num) {

@@ -6,45 +6,25 @@ import javafx.application.Platform;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.StringJoiner;
-import java.io.*;
-import java.net.*;
-import static fydp.view.Solution.initialSolution;
 
-import org.json.simple.JSONObject;
+import static fydp.view.Solution.initialSolution;
 
 /**
  * Created by xiuxu on 2017-03-09.
  */
 public class ReadConsoleRunnable implements Runnable {
-    // might need if he isn't already running a background thread to run this.
-//    public static void main (String[] args) throws Exception{
-//        ReadConsoleRunnable SERVER = new ReadConsoleRunnable();
-//        SERVER.run();
-//    }
-    public void run(){
-
-        ServerSocket SRVSOCK = null;
+    public void run() {
         BufferedReader br = null;
-        Socket SOCK = null;
         try {
-            SRVSOCK = new ServerSocket(444);
-            SOCK = SRVSOCK.accept();
-            InputStreamReader IR = new InputStreamReader(SOCK.getInputStream());
+            br = new BufferedReader(new InputStreamReader(System.in));
 
-
-            // instead of this: br = new BufferedReader(new InputStreamReader(System.in));
-            br = new BufferedReader(IR);
-
-            //while (true) {
+            while (true) {
 
                 //System.out.print("Enter vehicle info to be added : add (ID, battery, start, end, charge rate\n");
 
                 String input = br.readLine();
-
 
                 String sl[] = input.split(" ");
 
@@ -85,6 +65,12 @@ public class ReadConsoleRunnable implements Runnable {
                     });
                 }
 
+                if (sl[0].equals("-print")) {
+                    for (CarCharger carCharger : initialSolution) {
+                        System.out.println(Arrays.toString(carCharger.chargeTime));
+                    }
+                }
+
                 if ("q".equals(input)) {
                     System.out.println("Exit!");
                     //System.exit(0);
@@ -92,39 +78,18 @@ public class ReadConsoleRunnable implements Runnable {
 
                 //System.out.println("input : " + input);
                 //System.out.println("-----------\n");
-            //}
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
+            if (br != null) {
                 try {
-                    if (SOCK.isConnected() == true){
-                        PrintStream PS = new PrintStream(SOCK.getOutputStream());
-                        ArrayList<CarCharger> idSortedList = new ArrayList<>(initialSolution);
-                        idSortedList.sort((o1, o2) -> (o1.getCarID() - o2.getCarID()));
-                        //PS.println(Arrays.toString(carCharger.chargeTime));
-                        // TODO: add loop to output into database the list of cars
-                        JSONObject dataSet = new JSONObject();
-
-                        for (CarCharger carCharger : idSortedList) {
-                        dataSet.put(carCharger.getCarID(),Arrays.toString(carCharger.chargeTime));
-
-                        //System.out.println(carCharger.getCarID());
-                        //System.out.println(Arrays.toString(carCharger.chargeTime));
-
-                        }
-                        PS.println(dataSet);
-                    }
                     br.close();
-                    SOCK.close();
-                    SRVSOCK.close();
-
-                    run();
-
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
+            }
         }
     }
 
