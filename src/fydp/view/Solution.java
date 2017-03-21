@@ -70,7 +70,7 @@ public class Solution {
             }
         }
 
-        System.out.println(Arrays.toString(initialSolution.get(0).batteryProgress));
+        //System.out.println(Arrays.toString(initialSolution.get(0).batteryProgress));
     }
 
     private static int doubleToIntFloor(double num) {
