@@ -29,6 +29,7 @@ public class ReadConsoleRunnable implements Runnable {
     public int charge;
     public int chargerate;
     public int chargeslots;
+    public int batteryProgress;
     public void run(){
 
         ServerSocket SRVSOCK = null;
@@ -83,6 +84,10 @@ public class ReadConsoleRunnable implements Runnable {
             if (sl[0].equals("-chargeslots")){
                 chargeslots = 1;
             }
+            batteryProgress = 0;
+            if (sl[0].equals("-batteryProgress")){
+                batteryProgress = 1;
+            }
 
             if (sl[0].equals("-delete")) {
                 Platform.runLater(new Runnable() {
@@ -120,15 +125,21 @@ public class ReadConsoleRunnable implements Runnable {
                     PrintStream PS = new PrintStream(SOCK.getOutputStream());
 
 
-                    ArrayList<CarCharger> idSortedList = new ArrayList<>(initialSolution);
-                    idSortedList.sort((o1, o2) -> (o1.getCarID() - o2.getCarID()));
+                    //ArrayList<CarCharger> idSortedList = new ArrayList<>(initialSolution);
+                   // idSortedList.sort((o1, o2) -> (o1.getCarID() - o2.getCarID()));
                     //PS.println(Arrays.toString(carCharger.chargeTime));
                     // TODO: add loop to output into database the list of cars
                     JSONObject dataSet = new JSONObject();
 
-                    for (CarCharger carCharger : idSortedList) {
+                    for (CarCharger carCharger : initialSolution) {
                         //dataSet.put(carCharger.getCarID(),Arrays.toString(carCharger.batteryProgress));
+
+
                         dataSet.put(carCharger.getCarID(),Arrays.toString(carCharger.chargeTime));
+                        if (batteryProgress == 1){
+                            dataSet.put(carCharger.getCarID(),Arrays.toString(carCharger.batteryProgress));
+                        }
+
                         if (charge == 1) {
                             dataSet.put(carCharger.getCarID(), Double.toString(carCharger.getBatteryLevel()));
                         }
