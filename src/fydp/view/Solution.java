@@ -5,6 +5,7 @@ import fydp.model.CarChargerController;
 import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.concurrent.ThreadLocalRandom;
@@ -51,17 +52,25 @@ public class Solution {
         for (CarCharger carCharger : initialSolution) {
             double progressValue = (1 - carCharger.getBatteryLevel()) / carCharger.getChargeSlots();
 
-            carCharger.batteryProgress[carCharger.getStartTime()] = carCharger.getBatteryLevel();
+            carCharger.batteryProgress[carCharger.getStartTime()] = carCharger.getBatteryLevel() + progressValue;
+            boolean isFirst = true;
             for (int i = carCharger.getStartTime()+1; i < carCharger.getEndTime(); i++) {
                 // charging
                 if (carCharger.chargeTime[i] == 3) {
-                    carCharger.batteryProgress[i] = carCharger.batteryProgress[i-1] + progressValue;
+                    if (carCharger.batteryProgress[i-1] < 1.0) {
+                        carCharger.batteryProgress[i] = carCharger.batteryProgress[i - 1] + progressValue;
+                    }
+                    else {
+                        carCharger.batteryProgress[i] = carCharger.batteryProgress[i-1];
+                    }
                 }
                 else {
                     carCharger.batteryProgress[i] = carCharger.batteryProgress[i-1];
                 }
             }
         }
+
+        System.out.println(Arrays.toString(initialSolution.get(0).batteryProgress));
     }
 
     private static int doubleToIntFloor(double num) {

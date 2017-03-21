@@ -152,7 +152,7 @@ public class CarCharger{
     }
 
     public void setFields() {
-        fullChargeTime = ThreadLocalRandom.current().nextDouble(3,5);
+        //fullChargeTime = ThreadLocalRandom.current().nextDouble(3,5);
 
         chargeSlots = (int) Math.ceil((1- batteryLevel) * fullChargeTime * 2);
 
