@@ -203,7 +203,7 @@ public class MainViewController {
                     if (c.wasAdded() || c.wasRemoved()) {
                         initializeFields();
                         refreshGraphs();
-                        printSchedules();
+                        //printSchedules();
                     }
                 }
             }

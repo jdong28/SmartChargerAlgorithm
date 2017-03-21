@@ -17,13 +17,13 @@
    <tabs>
       <Tab closable="false" text="Graph View">
          <content>
-            <SplitPane dividerPositions="0.566815144766147" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="900.0">
+            <SplitPane dividerPositions="0.566815144766147" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="900.0">
               <items>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                      <children>
                         <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <center>
-                              <ScrollPane prefHeight="898.0" prefWidth="664.0">
+                              <ScrollPane prefHeight="700.0" prefWidth="664.0">
                                  <content>
                                     <Accordion fx:id="fxScheduleAccordion" />
                                  </content>
@@ -34,7 +34,7 @@
                   </AnchorPane>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                      <children>
-                        <ScrollPane prefHeight="900.0" prefWidth="387.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <ScrollPane prefHeight="700.0" prefWidth="387.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <content>
                               <VBox prefHeight="900.0" prefWidth="387.0">
                                  <children>

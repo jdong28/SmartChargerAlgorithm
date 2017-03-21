@@ -142,9 +142,9 @@ public class CarCharger{
         carID = id;
 
         //nextInt upper bound exclusive
-        //use 24 hour notations
-        startTime = ThreadLocalRandom.current().nextInt(7, 10);
-        endTime = ThreadLocalRandom.current().nextInt(15, 20);
+        //use 48 half-hour notations
+        startTime = ThreadLocalRandom.current().nextInt(14, 21);
+        endTime = ThreadLocalRandom.current().nextInt(30, 41);
 
         setFields();
 
@@ -155,7 +155,7 @@ public class CarCharger{
         int counter = 0;
 
         for (int i = 0; i < 48; i ++) {
-            if (i < startTime * 2 || i > endTime * 2) {
+            if (i < startTime || i > endTime) {
                 chargeTime[i] = 2;
                 unoptimizedChargeTime[i] = 2;
             }
