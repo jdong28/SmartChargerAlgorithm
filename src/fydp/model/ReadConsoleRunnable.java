@@ -118,7 +118,10 @@ public class ReadConsoleRunnable implements Runnable {
                     // TODO: add loop to output into database the list of cars
                     JSONObject dataSet = new JSONObject();
 
-                    for (CarCharger carCharger : initialSolution) {
+
+                    for (Iterator<CarCharger> iterator = initialSolution.iterator(); iterator.hasNext(); ) {
+                        CarCharger carCharger = iterator.next();
+
                         //dataSet.put(carCharger.getCarID(),Arrays.toString(carCharger.batteryProgress));
 
 
