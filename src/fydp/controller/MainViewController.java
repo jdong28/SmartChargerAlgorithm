@@ -12,6 +12,7 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,6 +42,8 @@ public class MainViewController {
     private static double[] demandAfter = new double[48];
 
     // javafx fields
+    @FXML
+    private VBox carScheduleVBox;
     @FXML
     private Accordion fxScheduleAccordion;
     @FXML
@@ -118,13 +121,19 @@ public class MainViewController {
             tps[i] = new TitledPane(carName, ac[i]);
         }
         // Setup
-
-        if (!fxScheduleAccordion.getPanes().isEmpty()) {
-            fxScheduleAccordion.getPanes().clear();
+        if (!carScheduleVBox.getChildren().isEmpty()) {
+            carScheduleVBox.getChildren().clear();
         }
 
-        fxScheduleAccordion.getPanes().addAll(tps);
-        fxScheduleAccordion.setExpandedPane(tps[0]);
+        carScheduleVBox.getChildren().addAll(tps);
+        ((TitledPane) carScheduleVBox.getChildren().get(1)).setExpanded(true);
+
+//        if (!fxScheduleAccordion.getPanes().isEmpty()) {
+//            fxScheduleAccordion.getPanes().clear();
+//        }
+//
+//        fxScheduleAccordion.getPanes().addAll(tps);
+//        fxScheduleAccordion.setExpandedPane(tps[0]);
     }
 
     private void configureDemandGraph() {
@@ -136,10 +145,26 @@ public class MainViewController {
         XYChart.Series afterAlgo = new XYChart.Series();
         afterAlgo.setName("Demand after optimization");
 
+        NumberAxis xAxis = (NumberAxis) priceComparisonChart.getXAxis();
+        xAxis.setAutoRanging(false);
+        xAxis.setLowerBound(0);
+        xAxis.setUpperBound(24);
+        xAxis.setTickUnit(0.5);
+
         for (int i = 0; i < 48; i++) {
 
             double yValueBeforeAlgo = 0;
             double yValueAfterAlgo = 0;
+
+            double xValue = 0;
+            // even
+            if ( (i & 1) == 0 ) {
+                xValue = i/2;
+            }
+            // odd
+            else {
+                xValue = i/2 + 0.5;
+            }
 
             // loop through every car
             for (int j = 0; j < solSize; j ++) {
@@ -152,14 +177,13 @@ public class MainViewController {
                     yValueAfterAlgo = yValueAfterAlgo + currentCar.getChargeRate();
                 }
             }
-            beforeAlgo.getData().add(new XYChart.Data<>(i, yValueBeforeAlgo));
+            beforeAlgo.getData().add(new XYChart.Data<>(xValue, yValueBeforeAlgo));
 
-            afterAlgo.getData().add(new XYChart.Data<>(i, yValueAfterAlgo));
+            afterAlgo.getData().add(new XYChart.Data<>(xValue, yValueAfterAlgo));
 
             demandBefore[i] = yValueBeforeAlgo;
             demandAfter[i] = yValueAfterAlgo;
         }
-
         data.addAll(beforeAlgo, afterAlgo);
         priceComparisonChart.setData(data);
         priceComparisonChart.setTitle("Demand Comparison");
@@ -170,8 +194,23 @@ public class MainViewController {
                 .observableArrayList();
         XYChart.Series elecPrice = new XYChart.Series();
 
+        NumberAxis xAxis = (NumberAxis) electricityChart.getXAxis();
+        xAxis.setAutoRanging(false);
+        xAxis.setLowerBound(0);
+        xAxis.setUpperBound(24);
+        xAxis.setTickUnit(0.5);
+
         for (int i = 0; i < 48; i++) {
-            elecPrice.getData().add(new XYChart.Data<>(i, electricityPrice[i]));
+            double xValue = 0;
+            // even
+            if ( (i & 1) == 0 ) {
+                xValue = i/2;
+            }
+            // odd
+            else {
+                xValue = i/2 + 0.5;
+            }
+            elecPrice.getData().add(new XYChart.Data<>(xValue, electricityPrice[i]));
         }
 
         data.addAll(elecPrice);
@@ -211,9 +250,9 @@ public class MainViewController {
     }
 
     private void printSchedules() {
-        ArrayList<CarCharger> idSortedList = new ArrayList<>(initialSolution);
-        idSortedList.sort((o1, o2) -> (o1.getCarID() - o2.getCarID()));
-        for (CarCharger carCharger : idSortedList) {
+        //ArrayList<CarCharger> idSortedList = new ArrayList<>(initialSolution);
+        //idSortedList.sort((o1, o2) -> (o1.getCarID() - o2.getCarID()));
+        for (CarCharger carCharger : initialSolution) {
             System.out.println(Arrays.toString(carCharger.chargeTime));
         }
     }
